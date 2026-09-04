@@ -1,0 +1,39 @@
+### read all users
+GET http://localhost:3000/users
+
+### create a new user
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "username": "Johny Jr.",
+  "email": "Johny.jr@cat.com",
+  "password": "catcateiei"
+}
+
+### update a user
+PUT http://localhost:3000/users/3
+Content-Type: application/json
+
+{
+  "username": "Bobby Jr.",
+  "email": "Bobby.jr@cat.com",
+  "password": "bobbycatcateiei"
+}
+
+### delete a user
+DELETE http://localhost:3000/users/2
+
+
+### trigger centralized error middleware 1
+PUT http://localhost:3000/users/5
+
+### trigger centralized error middleware 2
+POST http://localhost:3000/users/5
+Content-Type: application/json
+
+{
+  "username": "tester",
+  "email": "test",
+
+}

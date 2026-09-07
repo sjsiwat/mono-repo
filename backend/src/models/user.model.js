@@ -3,7 +3,13 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema(
   {
     username: { type: String },
-    email: { type: String, unique: true },
+    email: {
+      type: String,
+      unique: true,
+      lowerCase: true,
+      trim: true,
+      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"],
+    },
     password: { type: String, select: false },
   },
   { timestamps: true },

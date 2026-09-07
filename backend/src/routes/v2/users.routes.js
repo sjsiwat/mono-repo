@@ -35,16 +35,41 @@ router.post("/", async (req, res, next) => {
 });
 
 // update
-router.put("/:id", (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
   try {
+    const { id } = req.params;
+    const { username, email, password } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { username, email, password },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const { password: _password, ...userWithoutPassword } =
+      updatedUser.toObject();
+    return res.status(200).json(userWithoutPassword);
   } catch (err) {
     next(err);
   }
 });
 
 // delete
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
+    const { id } = req.params;
+
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({ message: "Yo ! User deleted successfully" });
   } catch (err) {
     next(err);
   }

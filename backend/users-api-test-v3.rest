@@ -1,0 +1,29 @@
+@baseUrl = http://localhost:666/api/v2
+
+### Read all users
+GET {{baseUrl}}/users/pg
+
+### Create a new user
+POST {{baseUrl}}/users/pg
+Content-Type: application/json
+
+{
+  "username": "sadat_eepg",
+  "email": "sat@supabaseeiei.ioadd",
+  "password": "testpad1adssd23",
+  "role": "user"
+}
+
+### PUT update user
+PUT {{baseUrl}}/users/pg/e9edcf44-1921-4bfc-90bd-50f88c267362
+Content-Type: application/json
+
+{
+  "username": "johnyboy_updatedasd",
+  "email": "cat@supabase.ioasd",
+  "password": "newpassword123asdasd",
+  "role": "admin"
+}
+
+### Delete a user
+DELETE {{baseUrl}}/users/pg/e9edcf44-1921-4bfc-90bd-50f88c267362

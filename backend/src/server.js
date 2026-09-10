@@ -9,9 +9,24 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const app = express();
-const port = 666;
+const port = process.env.PORT || 666;
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // อนุญาตคำขอที่ไม่มี origin (เช่น Postman, cURL, server-to-server) หรือ origin ที่ระบุ
+    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.some(o => origin.startsWith(o))) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 

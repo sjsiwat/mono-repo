@@ -1,6 +1,5 @@
-// API Service for JSD-MONO Backend (Port 666)
-
-export const API_BASE_URL = "http://localhost:666";
+// API Service for JSD-MONO Backend (Port 666 local or Render in production)
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:666";
 
 // Stateful In-Memory Database for dynamic simulator
 let memoryUsersV1 = [

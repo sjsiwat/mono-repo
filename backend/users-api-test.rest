@@ -1,8 +1,8 @@
 ### read all users
-GET http://localhost:3000/users
+GET http://localhost:666/api/v1/users
 
 ### create a new user
-POST http://localhost:3000/users
+POST http://localhost:666/api/v1/users
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ### update a user
-PUT http://localhost:3000/users/3
+PUT http://localhost:666/api/v1/users/3
 Content-Type: application/json
 
 {
@@ -22,14 +22,14 @@ Content-Type: application/json
 }
 
 ### delete a user
-DELETE http://localhost:3000/users/2
+DELETE http://localhost:666/api/v1/users/2
 
 
 ### trigger centralized error middleware 1
-PUT http://localhost:3000/users/5
+PUT http://localhost:666/api/v1/users/5
 
 ### trigger centralized error middleware 2
-POST http://localhost:3000/users/5
+POST http://localhost:666/api/v1/users/5
 Content-Type: application/json
 
 {

@@ -1,0 +1,75 @@
+@baseUrl = http://localhost:666
+
+### 1. POST: สมัครสมาชิก (Register) - Root Endpoint
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+    "username": "tester_bcrypt_01",
+    "email": "tester01@example.com",
+    "password": "mypassword123"
+}
+
+### 2. POST: สมัครสมาชิก (Register) - v2 Auth Endpoint
+POST {{baseUrl}}/api/v2/auth/register
+Content-Type: application/json
+
+{
+    "username": "tester_bcrypt_02",
+    "email": "tester02@example.com",
+    "password": "mypassword456"
+}
+
+### 3. GET: ดึงข้อมูลผู้ใช้ทั้งหมด
+GET {{baseUrl}}/users
+
+### 4. POST: เข้าสู่ระบบ (Login) - รหัสผ่านถูกต้อง
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "tester_bcrypt_01",
+    "password": "mypassword123"
+}
+
+### 5. POST: เข้าสู่ระบบ (Login) - รหัสผ่านไม่ถูกต้อง
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "tester_bcrypt_01",
+    "password": "wrongpassword"
+}
+
+### 6. POST: เข้าสู่ระบบ (Login) - ผ่าน /api/v2/auth/login
+POST {{baseUrl}}/api/v2/auth/login
+Content-Type: application/json
+
+{
+    "username": "tester_bcrypt_02",
+    "password": "mypassword456"
+}
+
+### 7. PUT: อัปเดตรหัสผ่าน (แบบที่ 1: ส่ง ID ผ่าน URL /users/by-param/:id)
+# นำ ObjectId จริงมาแทนที่ด้านล่าง
+PUT {{baseUrl}}/users/by-param/6aa0d16f53fdf276a370e6cf
+Content-Type: application/json
+
+{
+    "password": "newpassword_from_param"
+}
+
+### 8. PUT: อัปเดตรหัสผ่าน (แบบที่ 2: ส่ง ID ผ่าน Body /users/by-body)
+PUT {{baseUrl}}/users/by-body
+Content-Type: application/json
+
+{
+    "id": "6aa0d16f53fdf276a370e6cf",
+    "password": "newpassword_from_body"
+}
+
+### 9. DELETE: ลบผู้ใช้ด้วย Username
+DELETE {{baseUrl}}/users/tester_bcrypt_01
+
+### 10. DELETE: ลบผู้ใช้ด้วย ID หรือ Username
+DELETE {{baseUrl}}/users/tester_bcrypt_02

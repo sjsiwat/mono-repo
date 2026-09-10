@@ -1,6 +1,7 @@
 import { CURRICULUM } from '../data/curriculum';
 import { CodeWalkthrough } from '../components/CodeWalkthrough';
 import { BackButton } from '../components/BackButton';
+import { ApiRestaurantAnimation } from '../components/ApiRestaurantAnimation';
 import { Zap, Target, Check, X, ArrowRight, ArrowLeftRight, Radio } from 'lucide-react';
 
 export default function ApiVsRestPage() {
@@ -92,6 +93,9 @@ export default function ApiVsRestPage() {
           {m1.content.whatIsApi.explanation}
         </div>
       </div>
+
+      {/* Interactive Restaurant Analogy Animation */}
+      <ApiRestaurantAnimation />
 
       {/* Core Paradigm Deep Dive: API vs REST API */}
       <div className="p-8 bg-[#FFFFFF] border border-[#D9D8D3] space-y-6" style={{ borderRadius: '6px' }}>

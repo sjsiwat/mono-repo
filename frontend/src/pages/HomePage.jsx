@@ -27,7 +27,7 @@ export default function HomePage({ onNavigate }) {
       code: 'MOD_03',
       badge: 'PARADIGMS & ARCHITECTURE',
       title: 'API กับ REST API ต่างกันอย่างไร?',
-      desc: 'วิเคราะห์ความแตกต่างระหว่าง API ทั่วไปกับ REST API, เปรียบเทียบ WebSocket, SSE, GraphQL และ gRPC หมัดต่อหมัด',
+      desc: 'วิเคราะห์ความแตกต่าง พร้อมจำลองอนิเมชั่นร้านอาหาร (The Restaurant Analogy) และเปรียบเทียบ WebSocket, SSE, GraphQL หมัดต่อหมัด',
       icon: Compass,
       colSpan: 'lg:col-span-4'
     },

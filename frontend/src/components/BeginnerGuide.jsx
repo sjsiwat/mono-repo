@@ -3,6 +3,7 @@ import { ChevronDown, ChevronsUpDown, Terminal } from 'lucide-react';
 import { CodeWalkthrough } from './CodeWalkthrough';
 import { TerminalCodeBlock } from './TerminalCodeBlock';
 import { FunctionAnatomySection } from './FunctionAnatomySection';
+import { Step10FrontendResultPreview } from './Step10FrontendResultPreview';
 
 export function BeginnerGuide() {
   const [openSteps, setOpenSteps] = useState(new Set());
@@ -827,7 +828,8 @@ export function UserDashboard() {
         ],
         pitfall: "หากลืมใส่ [] ใน useEffect(() => {...}) ผลลัพธ์คือทุกครั้งที่ setUsers() ถูกเรียก Component จะ Re-render ใหม่ และการ Re-render นั้นจะไปสั่งให้ useEffect ยิง API ซ้ำอีก กลายเป็น Infinite Loop ยิงหลายพันคำขอต่อวินาทีจนเซิร์ฟเวอร์ล่มทันที!",
         productionTip: "ในระบบจริงขนาดใหญ่ที่มีการดึงข้อมูลและแชร์ State หลายจุด นิยมใช้ React Query (TanStack Query) หรือ SWR เพราะมีระบบ Caching ในตัว, มีระบบดึงใหม่อัตโนมัติเมื่อหลุดโฟกัส (Refetch on Window Focus), และตัดคำขอที่ซ้ำซ้อน (Deduplication) ให้อัตโนมัติ"
-      }
+      },
+      renderResultPreview: true
     }
   ];
 
@@ -966,6 +968,12 @@ export function UserDashboard() {
                           pitfall={item.extraWalkthrough.pitfall}
                           productionTip={item.extraWalkthrough.productionTip}
                         />
+                      </div>
+                    )}
+
+                    {item.renderResultPreview && (
+                      <div className="pt-8 mt-8 border-t-2 border-dashed border-[#D9D8D3]">
+                        <Step10FrontendResultPreview />
                       </div>
                     )}
                   </div>

@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { checkServerHealth } from '../services/api';
 import { Code2, Menu, X } from 'lucide-react';
 
-export function Navbar({ activeSection, onNavigate }) {
+export const Navbar = memo(function Navbar({ activeSection, onNavigate }) {
   const [serverStatus, setServerStatus] = useState({ online: false, latency: 0, checked: false });
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -43,7 +43,10 @@ export function Navbar({ activeSection, onNavigate }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#F6F5F1]/95 backdrop-blur-md border-b border-[#D9D8D3] transition-colors">
+    <header 
+      className="sticky top-0 z-50 w-full bg-[#F6F5F1] border-b border-[#D9D8D3]"
+      style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)', willChange: 'transform' }}
+    >
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         {/* Brand / Logo: Clickable to go Home */}
         <div
@@ -139,4 +142,4 @@ export function Navbar({ activeSection, onNavigate }) {
       )}
     </header>
   );
-}
+});

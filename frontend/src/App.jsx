@@ -33,21 +33,24 @@ function getPageFromHash() {
 
 function App() {
   const [currentPage, setCurrentPage] = useState(getPageFromHash);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleHashChange = () => {
       setCurrentPage(getPageFromHash());
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'instant' });
     };
 
     const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollTop || document.body.scrollTop;
-      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      if (windowHeight > 0) {
-        const scrolled = (totalScroll / windowHeight) * 100;
-        setScrollProgress(Math.min(100, Math.max(0, scrolled)));
-      }
+      window.requestAnimationFrame(() => {
+        const progressBar = document.getElementById('reading-progress');
+        if (!progressBar) return;
+        const totalScroll = document.documentElement.scrollTop || document.body.scrollTop;
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        if (windowHeight > 0) {
+          const scrolled = Math.min(100, Math.max(0, (totalScroll / windowHeight) * 100));
+          progressBar.style.width = `${scrolled}%`;
+        }
+      });
     };
 
     window.addEventListener('hashchange', handleHashChange);
@@ -94,7 +97,7 @@ function App() {
   return (
     <div className="min-h-screen bg-[#F6F5F1] text-[#20242A] flex flex-col font-sans selection:bg-[#2457FF] selection:text-white">
       {/* 2px Cobalt Reading Progress Indicator */}
-      <div id="reading-progress" style={{ width: `${scrollProgress}%` }} />
+      <div id="reading-progress" style={{ width: '0%' }} />
 
       {/* Swiss Editorial Top Navbar */}
       <Navbar activeSection={currentPage} onNavigate={navigateTo} />

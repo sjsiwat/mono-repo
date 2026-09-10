@@ -393,34 +393,36 @@ export function ApiRestaurantAnimation() {
               {currentStepData.stage}
             </span>
             <span className="font-mono text-xs px-2.5 py-0.5 rounded bg-[#20242A] text-amber-300 border border-[#2D3139] flex items-center gap-1.5 self-start sm:self-auto">
-              <Sparkles className="w-3 h-3 text-amber-400 animate-spin" />
+              <Sparkles className="w-3 h-3 text-amber-400" />
               <span>Packet: {currentStepData.packetLabel}</span>
             </span>
           </div>
 
-          <h5 className="text-base sm:text-lg font-bold text-white font-sans leading-snug">
-            {currentStepData.title}
-          </h5>
-          <p className="text-xs sm:text-sm text-[#9A9E9F] font-sans leading-relaxed">
-            {currentStepData.desc}
-          </p>
+          <div className="min-h-[60px]">
+            <h5 className="text-base sm:text-lg font-bold text-white font-sans leading-snug">
+              {currentStepData.title}
+            </h5>
+            <p className="text-xs sm:text-sm text-[#9A9E9F] font-sans leading-relaxed mt-1">
+              {currentStepData.desc}
+            </p>
+          </div>
 
           {/* Real-time Code Payload Inspector */}
           <div className="mt-3 pt-3 border-t border-[#2D3139] grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
-            <div className="bg-[#121418] p-3 rounded border border-[#2D3139] space-y-1">
+            <div className="bg-[#121418] p-3 rounded border border-[#2D3139] space-y-1 h-[130px] overflow-hidden">
               <div className="text-[10px] uppercase text-[#62666B] font-bold">1. Request Payload (Input)</div>
               <div className="text-blue-400 font-bold">{activeScenario.requestData.method} {activeScenario.requestData.endpoint}</div>
-              <pre className="text-[#D9D8D3] text-[11px] overflow-x-auto">
+              <pre className="text-[#D9D8D3] text-[11px] overflow-auto max-h-[70px]">
                 {JSON.stringify(activeScenario.requestData.payload || {}, null, 2)}
               </pre>
             </div>
 
-            <div className="bg-[#121418] p-3 rounded border border-[#2D3139] space-y-1">
+            <div className="bg-[#121418] p-3 rounded border border-[#2D3139] space-y-1 h-[130px] overflow-hidden">
               <div className="text-[10px] uppercase text-[#62666B] font-bold">2. Response Payload (Output)</div>
               <div className={activeScenario.responseData.status === 200 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
                 STATUS: {activeScenario.responseData.status}
               </div>
-              <pre className="text-[#D9D8D3] text-[11px] overflow-x-auto">
+              <pre className="text-[#D9D8D3] text-[11px] overflow-auto max-h-[70px]">
                 {JSON.stringify(activeScenario.responseData, null, 2)}
               </pre>
             </div>

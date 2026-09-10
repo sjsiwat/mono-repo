@@ -635,36 +635,199 @@ Content-Type: application/json
 
     {
       stepNum: "STEP 10",
-      title: "เชื่อมต่อ Frontend React เข้ากับ Backend (Clean Integration)",
-      purpose: "เขียนฟังก์ชันดึงข้อมูลจากหน้าเว็บ React ไปหา Express พอร์ต 666 พร้อมส่ง Cookie",
-      whySyntax: "ใช้คำสั่ง fetch() ของเบราว์เซอร์ โดยต้องระบุ credentials: 'include' ในตัวเลือก options",
-      connection: "เป็นการเชื่อมโยงปิดลูปทั้งระบบ: React พอร์ต 5173 ──(HTTP + Cookie)──> Express พอร์ต 666 ──(Query)──> MongoDB Atlas",
-      file: "frontend/src/services/api.js",
-      code: `// ฟังก์ชันเรียก API ฝั่ง React
-const API_BASE = "http://localhost:666/api";
+      title: "เชื่อมต่อ Frontend React เข้ากับ Backend (Service Layer + useEffect Component)",
+      purpose: "เชื่อมโยงระบบทั้งวงจรอย่างสมบูรณ์แบบ: สร้าง Service Layer สำหรับยิงคำขอ และประกอบร่าง React Component จริงที่ดึงข้อมูลด้วย useEffect พร้อมจัดการ State (Loading, Error, Data)",
+      whySyntax: "1. แยก API Service ออกจาก Component เพื่อ Clean Architecture และนำไปใช้ซ้ำได้\n2. ใน Component ต้องใช้ useEffect เพื่อสั่งดึงข้อมูลเมื่อหน้าเว็บแสดงผล (Mount)\n3. ใช้ useState แยก 3 สถานะ: data, loading, error เพื่อรองรับ Asynchronous Lifecycle",
+      connection: "สถาปัตยกรรมการเชื่อมต่อปิดลูปทั้งระบบ (End-to-End Complete Loop):\nReact Component (:5173) ──[useEffect Mount]──➔ userService.getAllUsers() ──[HTTP GET + credentials: 'include']──➔ Express Server (:666) ──[CORS & authUser]──➔ MongoDB Atlas ──[JSON 200 OK]──➔ setUsers(data) ──[React Re-render]──➔ แสดงผลข้อมูลบนหน้าจอ",
+      file: "frontend/src/services/userService.js",
+      code: `// =========================================================================
+// 1. API SERVICE LAYER: แยกตรรกะการเรียก HTTP ออกจากหน้าจอ (Clean Architecture)
+// =========================================================================
+const API_BASE = "http://localhost:666/api/v2";
 
-export async function fetchUsers() {
-  const response = await fetch(\`\${API_BASE}/v1/users\`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    // คำสั่งสำคัญที่สุด: สั่งให้เบราว์เซอร์แนบ HttpOnly Cookie ไปกับ Request ข้ามพอร์ต
-    credentials: "include"
-  });
+export const userService = {
+  // ดึงรายชื่อผู้ใช้ทั้งหมดจาก MongoDB
+  async getAllUsers() {
+    const response = await fetch(\`\${API_BASE}/users\`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      // ⭐ คำสั่งสำคัญที่สุด: สั่งให้เบราว์เซอร์แนบ HttpOnly Cookie ไปกับ Request ข้ามพอร์ต
+      credentials: "include"
+    });
 
-  if (!response.ok) {
-    throw new Error(\`HTTP error! status: \${response.status}\`);
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || err.message || \`HTTP error! status: \${response.status}\`);
+    }
+
+    return await response.json();
+  },
+
+  // ดึงข้อมูลโปรไฟล์ของตัวเองหลังตรวจบัตร (ต้องผ่าน authUser Middleware)
+  async getMyProfile() {
+    const response = await fetch(\`\${API_BASE}/users/auth\`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include"
+    });
+
+    if (!response.ok) {
+      throw new Error("Unauthorized: ไม่พบตั๋ว Cookie หรือ Token หมดอายุ");
+    }
+
+    return await response.json();
   }
-
-  return await response.json();
-}`,
+};`,
       breakdown: [
         {
           instruction: "credentials: 'include'",
-          why: "หากไม่ใส่คำสั่งนี้ เบราว์เซอร์จะไม่ส่ง Cookie ไปให้พอร์ต 666 ส่งผลให้ถูกปฏิเสธสิทธิ์ (401) ตลอดเวลา"
+          why: "หากไม่ใส่คำสั่งนี้ เบราว์เซอร์จะไม่ส่ง HttpOnly Cookie ข้ามพอร์ต 5173 ไปให้พอร์ต 666 ส่งผลให้ถูกปฏิเสธสิทธิ์ (401 Unauthorized) ตลอดเวลา"
+        },
+        {
+          instruction: "if (!response.ok) throw new Error(...)",
+          why: "fetch() จะไม่ throw Error เมื่อได้ Status 400 หรือ 500 เราจึงต้องตรวจเช็ค response.ok ด้วยตนเองก่อนนำไปใช้งาน"
         }
-      ]
+      ],
+      pitfall: "การเขียน fetch() ฝังใน JSX โดยตรงจะทำให้โค้ดกระจัดกระจายและบำรุงรักษาลำบาก เมื่อ URL หรือ Logic มีการเปลี่ยนแปลงจะต้องตามแก้ทุกไฟล์",
+      productionTip: "ในระบบ Production นิยมสร้าง API Client กลาง หรือใช้ไลบรารีอย่าง Axios เพื่อดักจับ Interceptors สำหรับ Refresh Token อัตโนมัติ",
+
+      extraWalkthrough: {
+        sectionTitle: "PART 02: ตัวอย่างการเรียกใช้ใน Component จริง (useEffect & useState Lifecycle)",
+        file: "frontend/src/components/UserDashboard.jsx",
+        code: `import { useState, useEffect } from "react";
+import { userService } from "../services/userService";
+
+export function UserDashboard() {
+  // 1. จัดการ 3 สถานะหลักของ UI (State Management)
+  const [users, setUsers] = useState([]);          // เก็บข้อมูลผู้ใช้ (เริ่มต้นเป็น Array ว่าง)
+  const [loading, setLoading] = useState(true);    // สถานะกำลังโหลด (เริ่มต้นเป็น true เพื่อโชว์ Spinner)
+  const [error, setError] = useState(null);        // สถานะข้อผิดพลาด (เริ่มต้นเป็น null)
+
+  // 2. Hook เชื่อมโยงวงจรชีวิต: สั่งดึงข้อมูลเมื่อ Component แสดงผลครั้งแรก
+  useEffect(() => {
+    // Flag ป้องกัน Memory Leak กรณีผู้ใช้กดเปลี่ยนหน้าก่อน API จะตอบกลับ
+    let isMounted = true;
+
+    // ⚠ กฎเหล็ก React: ห้ามใส่ async ที่ callback ของ useEffect โดยตรง
+    // ต้องประกาศฟังก์ชัน async ภายในแล้วสั่งรันแทน
+    async function loadData() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // ยิง API ผ่าน Service Layer ข้ามไปยังพอร์ต 666
+        const data = await userService.getAllUsers();
+
+        // อัปเดตข้อมูลเข้า State เฉพาะเมื่อ Component ยังอยู่บนหน้าจอ
+        if (isMounted) {
+          setUsers(data);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err.message || "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ Backend ได้");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false); // ปิดการหมุนโหลดไม่ว่าจะสำเร็จหรือล้มเหลว
+        }
+      }
+    }
+
+    loadData(); // สั่งรันฟังก์ชันดึงข้อมูล
+
+    // Cleanup Function: ทำงานอัตโนมัติเมื่อ Component ถูกถอดออกจากหน้าจอ (Unmount)
+    return () => {
+      isMounted = false;
+    };
+  }, []); // ⭐ [] Dependency Array ว่าง = สั่งให้รันเพียง "ครั้งเดียว" ตอน Mount
+
+  // 3. จังหวะที่ 1: หน้าจอกำลังรอข้อมูล (Loading State)
+  if (loading) {
+    return (
+      <div className="p-8 text-center font-mono text-sm text-[#62666B]">
+        <div className="animate-spin w-6 h-6 border-2 border-[#2457FF] border-t-transparent rounded-full mx-auto mb-2" />
+        <p>กำลังเชื่อมต่อ API พอร์ต 666 เพื่อดึงข้อมูลจาก MongoDB...</p>
+      </div>
+    );
+  }
+
+  // 4. จังหวะที่ 2: หน้าจอเมื่อเกิดปัญหา (Error State)
+  if (error) {
+    return (
+      <div className="p-5 bg-[#FFF0EA] border border-[#FF6B35] rounded font-sans text-sm space-y-3">
+        <div className="font-bold text-[#FF6B35]">เกิดข้อผิดพลาดในการโหลดข้อมูล:</div>
+        <p className="font-mono text-xs text-[#20242A] bg-white p-2.5 rounded border border-[#FF6B35]/30">
+          {error}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-3 py-1.5 bg-[#FF6B35] text-white text-xs font-mono rounded hover:bg-[#E0531F] cursor-pointer"
+        >
+          ลองใหม่อีกครั้ง (Retry)
+        </button>
+      </div>
+    );
+  }
+
+  // 5. จังหวะที่ 3: หน้าจอแสดงผลข้อมูลสำเร็จ (Success Data State)
+  return (
+    <div className="space-y-4 font-sans">
+      <div className="flex items-center justify-between pb-3 border-b border-[#D9D8D3]">
+        <h4 className="font-bold text-lg text-[#20242A]">
+          รายชื่อสมาชิกจากฐานข้อมูล MongoDB ({users.length} คน)
+        </h4>
+        <span className="font-mono text-xs text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
+          ● 200 OK Live Connected
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {users.map((user) => (
+          <div
+            key={user._id || user.id}
+            className="p-4 bg-white border border-[#D9D8D3] rounded hover:border-[#2457FF] transition-all shadow-2xs"
+          >
+            <div className="font-bold text-sm text-[#20242A]">{user.username}</div>
+            <div className="font-mono text-xs text-[#62666B] mt-0.5">{user.email}</div>
+            <div className="mt-2 text-[11px] font-mono text-[#2457FF] uppercase font-semibold">
+              Role: {user.role || "user"}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}`,
+        purpose: "แสดงตัวอย่างการประกอบร่าง Component จริงใน React ที่เชื่อมโยงกับ API อย่างครบวงจร ตั้งแต่ Mount, Fetch, จัดการ State จนถึงการเรนเดอร์ลง UI",
+        whySyntax: "1. ห้ามเขียน useEffect(async () => ...): เพราะ React คาดหวังให้ useEffect คืนค่าเป็น Cleanup Function หรือ undefined เท่านั้น หากใส่ async ฟังก์ชันจะคืนค่าเป็น Promise ซึ่งทำให้ React สับสนและเกิดบั๊ก\n2. Dependency Array []: การใส่ [] กำหนดให้ Hook ทำงานเพียงรอบเดียวตอนเปิดหน้าจอ ป้องกันการยิง API วนลูปไม่รู้จบ (Infinite Loop)",
+        connection: "สถาปัตยกรรมการไหลของข้อมูล 6 จังหวะอย่างละเอียด:\n01. [Client Mount]: React เรนเดอร์ UserDashboard ลงบนหน้าจอ (พอร์ต 5173)\n02. [Hook Trigger]: useEffect ตรวจพบว่าหน้าจอพร้อม จึงสั่งรันฟังก์ชัน loadData()\n03. [Initial State]: setLoading(true) ทำให้ UI ตัดเข้าหน้าจอหมุน Loading ทันที\n04. [Network Dispatch]: userService.getAllUsers() ยิง HTTP GET ไปยังพอร์ต 666 พร้อมแนบ HttpOnly Cookie อัตโนมัติด้วย credentials: 'include'\n05. [Server Process]: Express ผ่าน CORS, ตรวจสอบ authUser, ดึงข้อมูลจาก MongoDB แล้วตอบ 200 OK JSON กลับมา\n06. [Re-render]: setUsers(data) นำข้อมูลเข้าสู่ State และ setLoading(false) ➔ React ทำ Reconciliation สั่งวาดการ์ดผู้ใช้ลงบนหน้าจออย่างสวยงาม",
+        breakdown: [
+          {
+            instruction: "useEffect(() => { ... }, [])",
+            why: "Hook คอยดักฟังจังหวะ Mount ของ Component โดยมี Dependency Array [] สั่งให้ยิง API เพียงรอบเดียวตอนเปิดหน้าเว็บ ป้องกันการยิงรัวไม่สิ้นสุด"
+          },
+          {
+            instruction: "let isMounted = true & return () => { isMounted = false }",
+            why: "เทคนิคป้องกัน Memory Leak: หากผู้ใช้กดย้ายหน้าก่อนที่เซิร์ฟเวอร์จะตอบกลับ จะช่วยป้องกันไม่ให้ React พยายามอัปเดต State บน Component ที่ถูกทำลายไปแล้ว"
+          },
+          {
+            instruction: "const [loading, setLoading] = useState(true)",
+            why: "ตัวแปรสลับมุมมองหน้าจอระหว่าง 'กำลังรอข้อมูล' กับ 'ข้อมูลจริง' เพื่อให้ผู้ใช้งานทราบว่าระบบกำลังทำงาน ไม่ใช่หน้าจอค้าง"
+          },
+          {
+            instruction: "try ... catch ... finally",
+            why: "โครงสร้างความปลอดภัย: ไม่ว่าจะสำเร็จหรือเกิด Error บล็อก finally จะสั่ง setLoading(false) เสมอ เพื่อการันตีว่าตัวหมุนโหลดจะหยุดทำงาน"
+          },
+          {
+            instruction: "users.map(user => <div key={user._id}>)",
+            why: "การแปลงข้อมูล Array ของ JSON ออกมาเป็น UI Card โดยต้องใส่ key={user._id} เพื่อให้ React จัดการ Virtual DOM ได้อย่างมีประสิทธิภาพสูงสุด"
+          }
+        ],
+        pitfall: "หากลืมใส่ [] ใน useEffect(() => {...}) ผลลัพธ์คือทุกครั้งที่ setUsers() ถูกเรียก Component จะ Re-render ใหม่ และการ Re-render นั้นจะไปสั่งให้ useEffect ยิง API ซ้ำอีก กลายเป็น Infinite Loop ยิงหลายพันคำขอต่อวินาทีจนเซิร์ฟเวอร์ล่มทันที!",
+        productionTip: "ในระบบจริงขนาดใหญ่ที่มีการดึงข้อมูลและแชร์ State หลายจุด นิยมใช้ React Query (TanStack Query) หรือ SWR เพราะมีระบบ Caching ในตัว, มีระบบดึงใหม่อัตโนมัติเมื่อหลุดโฟกัส (Refetch on Window Focus), และตัดคำขอที่ซ้ำซ้อน (Deduplication) ให้อัตโนมัติ"
+      }
     }
   ];
 
@@ -784,6 +947,27 @@ export async function fetchUsers() {
                       pitfall={item.pitfall}
                       productionTip={item.productionTip}
                     />
+
+                    {item.extraWalkthrough && (
+                      <div className="pt-8 mt-8 border-t-2 border-dashed border-[#D9D8D3] space-y-4">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#2457FF]" />
+                          <h4 className="font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-[#2457FF]">
+                            {item.extraWalkthrough.sectionTitle || "PART 02: REAL COMPONENT IMPLEMENTATION (USEEFFECT)"}
+                          </h4>
+                        </div>
+                        <CodeWalkthrough
+                          file={item.extraWalkthrough.file}
+                          code={item.extraWalkthrough.code}
+                          purpose={item.extraWalkthrough.purpose}
+                          whySyntax={item.extraWalkthrough.whySyntax}
+                          connection={item.extraWalkthrough.connection}
+                          breakdown={item.extraWalkthrough.breakdown}
+                          pitfall={item.extraWalkthrough.pitfall}
+                          productionTip={item.extraWalkthrough.productionTip}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

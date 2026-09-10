@@ -73,13 +73,13 @@ npm init -y`,
       terminalCode: `npm install express cors cookie-parser bcrypt jsonwebtoken mongoose @supabase/supabase-js`,
       code: `{
   "dependencies": {
-    "@supabase/supabase-js": "^2.116.0", // ไดรเวอร์เชื่อมต่อฐานข้อมูล Supabase PostgreSQL
-    "bcrypt": "^6.0.0",                 // อัลกอริทึมแฮชรหัสผ่าน 12 รอบ
+    "@supabase/supabase-js": "^2.49.1", // ไดรเวอร์เชื่อมต่อฐานข้อมูล Supabase PostgreSQL
+    "bcrypt": "^5.1.1",                 // อัลกอริทึมแฮชรหัสผ่าน 12 รอบ
     "cookie-parser": "^1.4.7",          // มิดเดิลแวร์แกะ Cookie จาก Header
-    "cors": "^2.8.6",                   // มิดเดิลแวร์เปิดทางข้ามพอร์ต
-    "express": "^5.2.1",                // เว็บเฟรมเวิร์กจัดการ HTTP Server
-    "jsonwebtoken": "^9.0.3",           // ตัวสร้างและตรวจสอบ Token
-    "mongoose": "^9.9.5"                // ตัวเชื่อมต่อและจัดการ Schema ของ MongoDB
+    "cors": "^2.8.5",                   // มิดเดิลแวร์เปิดทางข้ามพอร์ต
+    "express": "^4.21.2",               // เว็บเฟรมเวิร์กจัดการ HTTP Server ยอดนิยม
+    "jsonwebtoken": "^9.0.2",           // ตัวสร้างและตรวจสอบ Token
+    "mongoose": "^8.12.0"               // ตัวเชื่อมต่อและจัดการ Schema ของ MongoDB
   }
 }`,
       file: "backend/package.json (Dependencies)",
@@ -203,7 +203,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"]
+      match: [/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, "Invalid email format"]
     },
     // select: false เพื่อความปลอดภัยสูงสุด: เวลา find ปกติจะไม่ดึงรหัสผ่านติดมาด้วย
     password: { 
@@ -226,8 +226,12 @@ export const User = mongoose.model("User", userSchema);`,
           why: "เทคนิคความปลอดภัยระดับสากล: ซ่อนฟิลด์รหัสผ่านไม่ให้ Mongoose ดึงติดมาด้วยเวลา query ปกติ"
         },
         {
+          instruction: "password & passwordHash",
+          why: "เก็บค่า Hash ของรหัสผ่านคู่กันเพื่อรองรับความเข้ากันได้ย้อนหลัง (Backward Compatibility) ระหว่าง Route เวอร์ชัน v1 และ v2 ในโปรเจกต์นี้"
+        },
+        {
           instruction: "timestamps: true",
-          why: "บันทึกเวลาสร้างและเวลาแก้ไขข้อมูลล่าสุดให้อัตโนมัติ"
+          why: "บันทึกเวลาสร้าง (createdAt) และเวลาแก้ไขข้อมูลล่าสุด (updatedAt) ให้อัตโนมัติ"
         }
       ]
     },
@@ -327,8 +331,81 @@ router.post("/register", async (req, res, next) => {
     // 5. ตอบกลับด้วย Status 201 Created
     return res.status(201).json({ message: "Register successful", user: safeUser });
   } catch (err) {
+    // ดักจับกรณี Email หรือ Username ซ้ำ (MongoDB Duplicate Key Error Code 11000)
+    if (err.code === 11000) {
+      return res.status(409).json({ error: "Email or username already exists" });
+    }
     next(err);
   }
+});
+
+// =========================================================================
+// [AUTH] LOGIN: เข้าสู่ระบบ, ยืนยันรหัสผ่าน, ออก JWT และส่ง HttpOnly Cookie (POST /login)
+// =========================================================================
+router.post("/login", async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    // 1. ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "email and password are required" });
+    }
+
+    // 2. ค้นหาผู้ใช้จากอีเมล (ต้องใช้ .select("+password") ดึงรหัสผ่านที่ซ่อนไว้ออกมา)
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
+    }
+
+    // 3. เทียบรหัสผ่านที่ส่งมา กับ Hash ใน Database ด้วย bcrypt.compare()
+    const isMatched = await bcrypt.compare(password, user.password);
+    if (!isMatched) {
+      return res.status(400).json({ success: false, message: "Incorrect Password" });
+    }
+
+    // 4. สร้าง JWT Token บรรจุ payload { userId: user._id } อายุ 1 ชั่วโมง
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    const isProd = process.env.NODE_ENV === "production";
+
+    // 5. ส่ง Token ผ่าน HttpOnly Cookie (ป้องกันสคริปต์ XSS ขโมย Token)
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      path: "/",
+      maxAge: 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Login Successful",
+      user: {
+        _id: user._id,
+        username: user.username,
+        role: user.role,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// =========================================================================
+// [AUTH] LOGOUT: ล้าง HttpOnly Cookie ออกจากเบราว์เซอร์ (POST /logout)
+// =========================================================================
+router.post("/logout", (req, res) => {
+  const isProd = process.env.NODE_ENV === "production";
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+    path: "/",
+  });
+  return res.status(200).json({ success: true, message: "Logout Success" });
 });
 
 // =========================================================================
@@ -422,6 +499,18 @@ router.delete("/:id", async (req, res, next) => {
         {
           instruction: "[C] User.create() & res.status(201)",
           why: "การบันทึกข้อมูลใหม่ต้องคืน 201 Created เสมอ และต้องตัดรหัสผ่านทิ้งด้วย Rest Operator ก่อนส่ง JSON ออกไป"
+        },
+        {
+          instruction: "err.code === 11000 ➔ 409 Conflict",
+          why: "ดักจับกรณีอีเมลหรือ Username ซ้ำจาก MongoDB unique index เพื่อตอบกลับ 409 Conflict แทนที่จะปล่อยให้เซิร์ฟเวอร์พังเป็น 500"
+        },
+        {
+          instruction: "[AUTH] User.findOne().select('+password') & bcrypt.compare()",
+          why: "ดึงฟิลด์รหัสผ่านที่ถูกซ่อนไว้ด้วย select: false ออกมาเฉพาะตอน Login เพื่อนำมาเปรียบเทียบ hash อย่างปลอดภัย"
+        },
+        {
+          instruction: "res.cookie('accessToken', token, { httpOnly: true })",
+          why: "สร้างเซสชันด้วย HttpOnly Cookie ที่เบราว์เซอร์ไม่อนุญาตให้ JavaScript ภายนอกอ่าน ป้องกันการขโมย Token ผ่านช่องโหว่ XSS"
         },
         {
           instruction: "[R] User.find() & res.status(200)",

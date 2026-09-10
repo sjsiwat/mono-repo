@@ -4,41 +4,41 @@ import { ArrowUpRight, Terminal, Shield, Database, Compass, Flame, Radio } from 
 export default function HomePage({ onNavigate }) {
   const modules = [
     {
-      id: 'tutorial',
-      code: 'MOD_01',
-      badge: 'COMPLETE LIFECYCLE (10 STEPS)',
-      title: 'Step-by-Step: สร้าง Backend ตั้งแต่ 0 จนรันได้',
-      desc: 'รวบรวมทุกไฟล์จริง: .env, CORS, Database, Schema, Middleware, Routes v1/v2, และ Server.js เรียงตามขั้นตอนสากล',
-      icon: Terminal,
-      colSpan: 'lg:col-span-7',
-      isPrimary: true
-    },
-    {
-      id: 'databases',
-      code: 'MOD_02',
-      badge: 'DATABASE ESSENTIALS',
-      title: 'รวมคำสั่ง MongoDB & Supabase ที่ใช้บ่อย',
-      desc: 'คู่มือคำสั่ง CRUD, Query Filters, Projections, และเทคนิคป้องกัน CastError ใน MongoDB Mongoose และ Supabase Client',
-      icon: Database,
-      colSpan: 'lg:col-span-5'
-    },
-    {
       id: 'foundations',
-      code: 'MOD_03',
+      code: 'MOD_01',
       badge: 'PARADIGMS & ARCHITECTURE',
       title: 'What is API? (และสถาปัตยกรรม REST)',
       desc: 'วิเคราะห์ความแตกต่าง พร้อมจำลองอนิเมชั่นร้านอาหาร (The Restaurant Analogy) และเปรียบเทียบ WebSocket, SSE, GraphQL หมัดต่อหมัด',
       icon: Compass,
-      colSpan: 'lg:col-span-4'
+      colSpan: 'lg:col-span-7',
+      isPrimary: true
     },
     {
       id: 'structure',
-      code: 'MOD_04',
+      code: 'MOD_02',
       badge: 'MONOREPO BLUEPRINT',
       title: 'แผนผังโครงสร้างโปรเจกต์ (Structure)',
-      desc: 'ผังการไหลของข้อมูล 4 ระดับ (Pipeline Tiers) และต้นไม้โครงสร้างไฟล์จริงในโปรเจกต์ JSD-MONO',
+      desc: 'ผังการไหลของข้อมูล 4 ระดับ (Pipeline Tiers), Topology การ Deploy บน Cloudflare + Render, และต้นไม้โครงสร้างไฟล์จริง',
       icon: Radio,
-      colSpan: 'lg:col-span-4'
+      colSpan: 'lg:col-span-5'
+    },
+    {
+      id: 'tutorial',
+      code: 'MOD_03',
+      badge: 'COMPLETE LIFECYCLE (10 STEPS)',
+      title: 'Step-by-Step: สร้าง Backend ตั้งแต่ 0 จนรันได้',
+      desc: 'รวบรวมทุกไฟล์จริง: .env, CORS, Database, Schema, Middleware, CRUD & Login Controllers, และ Server.js เรียงตามขั้นตอนสากล',
+      icon: Terminal,
+      colSpan: 'lg:col-span-6'
+    },
+    {
+      id: 'databases',
+      code: 'MOD_04',
+      badge: 'DATABASE ESSENTIALS',
+      title: 'รวมคำสั่ง MongoDB & Supabase ที่ใช้บ่อย',
+      desc: 'คู่มือคำสั่ง CRUD, Query Filters, Projections, และเทคนิคป้องกัน CastError ใน MongoDB Mongoose และ Supabase Client',
+      icon: Database,
+      colSpan: 'lg:col-span-6'
     },
     {
       id: 'security',
@@ -56,7 +56,7 @@ export default function HomePage({ onNavigate }) {
       title: 'Problem Solving: ถอดบทเรียนบั๊กจริง (War Stories)',
       desc: 'เจาะลึกปัญหา API ค้างเติ่ง, CORS credentials หาย และวิธีดีบักสาเหตุที่แท้จริงอย่างเด็ดขาด',
       icon: Flame,
-      colSpan: 'lg:col-span-6',
+      colSpan: 'lg:col-span-4',
       isWarning: true
     },
     {
@@ -66,7 +66,7 @@ export default function HomePage({ onNavigate }) {
       title: 'Live API Console & Workbench',
       desc: 'ห้องทดลองยิง HTTP Request เชื่อมต่อกับ Backend พอร์ต 666 จริง พร้อมระบบทดสอบ Payload เรียลไทม์',
       icon: Terminal,
-      colSpan: 'lg:col-span-6'
+      colSpan: 'lg:col-span-4'
     }
   ];
 

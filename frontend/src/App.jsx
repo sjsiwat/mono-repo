@@ -14,6 +14,49 @@ import SecurityPage from './pages/SecurityPage';
 import WarStoriesPage from './pages/WarStoriesPage';
 import PlaygroundPage from './pages/PlaygroundPage';
 
+const ROUTE_META = {
+  home: {
+    title: "API Architecture & Engineering Guide — Swiss Editorial Style",
+    desc: "Four foundational rules behind every API response. ถอดรหัสจากโปรเจกต์จริง สู่หลักการออกแบบและเชื่อมต่อระบบ Front-End + Back-End"
+  },
+  foundations: {
+    title: "What is API & REST Architecture (MOD_01) | api.siwat.me",
+    desc: "ทำความเข้าใจ API และสถาปัตยกรรม REST พร้อมอนิเมชั่นร้านอาหาร (The Restaurant Analogy) และเปรียบเทียบ WebSocket, SSE, GraphQL"
+  },
+  structure: {
+    title: "Project Structure & Cloud Topology (MOD_02) | api.siwat.me",
+    desc: "แผนผังโครงสร้างโปรเจกต์ JSD-MONO สถาปัตยกรรม 4 Tiers และการ Deploy บน Cloudflare Workers, Render, และ MongoDB Atlas"
+  },
+  tutorial: {
+    title: "Step-by-Step Backend Guide (MOD_03) | api.siwat.me",
+    desc: "คู่มือสร้าง REST API ครบวงจร 10 ขั้นตอน: .env, MongoDB, Mongoose Model, authUser Middleware, CRUD & Login Controllers, server.js"
+  },
+  databases: {
+    title: "Database Essentials & Commands (MOD_04) | api.siwat.me",
+    desc: "คู่มือคำสั่ง CRUD, Query Filters, Projections และเทคนิคป้องกัน CastError สำหรับ MongoDB และ Supabase Client"
+  },
+  security: {
+    title: "Security, Hashing & Identity (MOD_05) | api.siwat.me",
+    desc: "มาตรฐานความปลอดภัยระดับ Production: Bcrypt แฮช 12 รอบ, การตัดรหัสผ่านทิ้งด้วย Destructuring, และ HttpOnly Cookie"
+  },
+  'war-stories': {
+    title: "Problem Solving & War Stories (MOD_06) | api.siwat.me",
+    desc: "ถอดบทเรียนจากปัญหาจริง: API ค้างจาก unhandled promise, CORS credentials หาย และเทคนิค Defensive Programming"
+  },
+  playground: {
+    title: "Interactive API Playground (MOD_07) | api.siwat.me",
+    desc: "ห้องทดลองยิง HTTP Request เชื่อมต่อกับ Render Backend พอร์ต 666 จริง พร้อมระบบทดสอบ Payload เรียลไทม์"
+  },
+  'env-cors': {
+    title: "Environment & CORS Guide | api.siwat.me",
+    desc: "คู่มือการตั้งค่า .env และ CORS ข้ามพอร์ตอย่างปลอดภัยสำหรับ Express และ React"
+  },
+  lifecycle: {
+    title: "Request-Response Lifecycle (v1 vs v2) | api.siwat.me",
+    desc: "การเดินทางของ HTTP Request ตั้งแต่เบราว์เซอร์ผ่าน Middleware จนถึง Controller และ Database"
+  }
+};
+
 function getPageFromHash() {
   const hash = window.location.hash.replace('#', '').trim();
   const validPages = [
@@ -33,6 +76,25 @@ function getPageFromHash() {
 
 function App() {
   const [currentPage, setCurrentPage] = useState(getPageFromHash);
+
+  // Dynamic SEO & Document Title per route
+  useEffect(() => {
+    const meta = ROUTE_META[currentPage] || ROUTE_META.home;
+    document.title = meta.title;
+
+    const setMetaTag = (selector, attribute, value) => {
+      let el = document.querySelector(selector);
+      if (el) {
+        el.setAttribute(attribute, value);
+      }
+    };
+
+    setMetaTag('meta[name="description"]', 'content', meta.desc);
+    setMetaTag('meta[property="og:title"]', 'content', meta.title);
+    setMetaTag('meta[property="og:description"]', 'content', meta.desc);
+    setMetaTag('meta[name="twitter:title"]', 'content', meta.title);
+    setMetaTag('meta[name="twitter:description"]', 'content', meta.desc);
+  }, [currentPage]);
 
   useEffect(() => {
     const handleHashChange = () => {

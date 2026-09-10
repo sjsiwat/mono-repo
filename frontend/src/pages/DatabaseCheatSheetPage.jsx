@@ -307,13 +307,14 @@ await User.updateMany(
 
 // ⭐ เทคนิคป้องกัน CastError ในระบบระดับ Production:
 // ตรวจก่อนว่า String id ที่ส่งมาใน URL เป็น ObjectId ของ MongoDB หรือไม่
+let deleted = null;
 if (mongoose.Types.ObjectId.isValid(id)) {
-  const deleted = await User.findByIdAndDelete(id);
+  deleted = await User.findByIdAndDelete(id);
 }
 
-// ถ้าไม่ใช่ ObjectId ให้ลองลบด้วย username แทน
+// ถ้าไม่ใช่ ObjectId หรือยังไม่พบลบ ให้ลองลบด้วย username แทน
 if (!deleted) {
-  const deleted = await User.findOneAndDelete({ username: id });
+  deleted = await User.findOneAndDelete({ username: id });
 }
 
 // ลบหลายเอกสารพร้อมกัน

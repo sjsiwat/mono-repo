@@ -11,15 +11,21 @@ export default function WarStoriesPage() {
   const incidents = [
     {
       quote: '"Request ส่งไปแล้ว แต่เบราว์เซอร์หมุนค้างไม่จบสิ้น"',
-      takeaway: 'ในระบบ Asynchronous ทุกแขนงของ If-Else ต้องจบด้วยการส่งคำตอบกลับ หรือเรียก next(err)'
+      takeaway: 'ในระบบ Asynchronous ทุกแขนงของ If-Else ต้องจบด้วยการส่งคำตอบกลับ หรือเรียก next(err)',
+      pitfall: 'นี่คือจุดอันตรายที่มองเห็นได้ยาก เพราะโปรแกรมไม่ได้ฟ้อง Error สีแดงออกมา แต่ส่งผลให้การทำงานค้างเติ่งในระดับ Event Loop จน Request เกิด Timeout',
+      purpose: 'การันตีว่าทุก execution path ต้องจบด้วยการส่ง response (res.json) หรือส่งต่อ error ด้วย next(err) ตามหลัก Fail-Fast'
     },
     {
       quote: '"ทำไมบน Local รันผ่านฉลุย แต่พอแยก Port 5173 แล้ว Cookie หายเกลี้ยง?"',
-      takeaway: 'CORS คือการตกลงร่วมกันระหว่าง Origin: ต้องเปิด credentials: true ทั้งบน Express และ React'
+      takeaway: 'CORS คือการตกลงร่วมกันระหว่าง Origin: ต้องเปิด credentials: true ทั้งบน Express และ React',
+      pitfall: 'CORS เป็นมาตรการความปลอดภัยฝั่งเบราว์เซอร์ หากไม่ระบุ origin และ credentials: true ให้ตรงกัน เบราว์เซอร์จะสั่งบล็อก Response และไม่ยอมส่ง Cookie ข้ามพอร์ต',
+      purpose: 'เปิดทางให้ Frontend ข้าม Origin เข้าถึง API ได้อย่างปลอดภัย พร้อมอนุญาตให้แลกเปลี่ยน HttpOnly Cookie ระหว่างโดเมนได้อย่างราบรื่น'
     },
     {
       quote: '"ผู้ใช้ใส่ชื่อ somchai ใน URL /users/:id แล้วเซิร์ฟเวอร์ Crash ทันที"',
-      takeaway: 'อย่าเชื่อใจ Input จากภายนอก: ใช้ mongoose.Types.ObjectId.isValid() ดักก่อนแตะ Database เสมอ'
+      takeaway: 'อย่าเชื่อใจ Input จากภายนอก: ใช้ mongoose.Types.ObjectId.isValid() ดักก่อนแตะ Database เสมอ',
+      pitfall: 'การส่ง String ที่ไม่ตรงสเปก 24-character Hex เข้า findById() จะทำให้ Mongoose throw CastError และหยุดการทำงานทันทีหากไม่มีการดักจับ',
+      purpose: 'ตรวจเช็กความถูกต้องของ Data Type ก่อนแตะฐานข้อมูล และสลับไปค้นหาด้วย username แทนเพื่อความยืดหยุ่น (Defensive Programming)'
     }
   ];
 
@@ -140,7 +146,7 @@ export default function WarStoriesPage() {
                       <CodeWalkthrough
                         file="anti-pattern.js"
                         code={bug.badCode}
-                        pitfall="นี่คือจุดอันตรายที่มองเห็นได้ยากในการเขียนโค้ด เพราะโปรแกรมไม่ได้ฟ้อง Error สีแดงออกมา แต่ส่งผลให้การทำงานค้างเติ่งในระดับ Event Loop"
+                        pitfall={incidentMeta.pitfall}
                       />
                     </div>
                   )}
@@ -156,7 +162,7 @@ export default function WarStoriesPage() {
                     <CodeWalkthrough
                       file="solution.js"
                       code={bug.goodCode}
-                      purpose="การันตีความถูกต้องของสถาปัตยกรรม และปิดโอกาสที่ระบบจะค้างด้วยหลัก Fail-Fast"
+                      purpose={incidentMeta.purpose}
                       productionTip={incidentMeta.takeaway}
                     />
                   </div>

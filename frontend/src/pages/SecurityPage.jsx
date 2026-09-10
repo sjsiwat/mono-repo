@@ -100,7 +100,7 @@ export default function SecurityPage() {
             </div>
           </div>
           <p className="text-xs text-[#62666B] font-sans leading-relaxed">
-            HttpOnly Cookie ป้องกันการขโมย Token ผ่าน XSS ได้ 100% เพราะ JavaScript ภายนอกไม่สามารถเข้าถึงสตริง Token ในเบราว์เซอร์ได้
+            HttpOnly Cookie ช่วยป้องกันไม่ให้ JavaScript (หรือมัลแวร์ที่ฝังผ่าน XSS) เข้าถึงหรืออ่านค่า Token ได้โดยตรง จึงช่วยตัดวงจรการขโมย Token ออกจากเบราว์เซอร์ได้อย่างมีประสิทธิภาพ
           </p>
         </div>
       </div>

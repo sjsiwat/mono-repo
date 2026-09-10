@@ -1,122 +1,116 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState, useEffect, lazy, Suspense } from 'react';
+import { Navbar } from './components/Navbar';
+import { Footer } from './components/Footer';
+import { PageSkeleton } from './components/PageSkeleton';
 
-function App() {
-  const [count, setCount] = useState(0)
+// ⭐ Code-Splitting via React.lazy() for each page
+const HomePage = lazy(() => import('./pages/HomePage'));
+const StructurePage = lazy(() => import('./pages/StructurePage'));
+const TutorialPage = lazy(() => import('./pages/TutorialPage'));
+const DatabaseCheatSheetPage = lazy(() => import('./pages/DatabaseCheatSheetPage'));
+const EnvCorsPage = lazy(() => import('./pages/EnvCorsPage'));
+const ApiVsRestPage = lazy(() => import('./pages/ApiVsRestPage'));
+const LifecyclePage = lazy(() => import('./pages/LifecyclePage'));
+const SecurityPage = lazy(() => import('./pages/SecurityPage'));
+const WarStoriesPage = lazy(() => import('./pages/WarStoriesPage'));
+const PlaygroundPage = lazy(() => import('./pages/PlaygroundPage'));
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+function getPageFromHash() {
+  const hash = window.location.hash.replace('#', '').trim();
+  const validPages = [
+    'home',
+    'structure',
+    'tutorial',
+    'databases',
+    'env-cors',
+    'foundations',
+    'lifecycle',
+    'security',
+    'war-stories',
+    'playground'
+  ];
+  return validPages.includes(hash) ? hash : 'home';
 }
 
-export default App
+function App() {
+  const [currentPage, setCurrentPage] = useState(getPageFromHash);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentPage(getPageFromHash());
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      if (windowHeight > 0) {
+        const scrolled = (totalScroll / windowHeight) * 100;
+        setScrollProgress(Math.min(100, Math.max(0, scrolled)));
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const navigateTo = (pageId) => {
+    window.location.hash = `#${pageId}`;
+    setCurrentPage(pageId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'structure':
+        return <StructurePage />;
+      case 'tutorial':
+        return <TutorialPage />;
+      case 'databases':
+        return <DatabaseCheatSheetPage />;
+      case 'env-cors':
+        return <EnvCorsPage />;
+      case 'foundations':
+        return <ApiVsRestPage />;
+      case 'lifecycle':
+        return <LifecyclePage />;
+      case 'security':
+        return <SecurityPage />;
+      case 'war-stories':
+        return <WarStoriesPage />;
+      case 'playground':
+        return <PlaygroundPage />;
+      case 'home':
+      default:
+        return <HomePage onNavigate={navigateTo} />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#F6F5F1] text-[#20242A] flex flex-col font-sans selection:bg-[#2457FF] selection:text-white">
+      {/* 2px Cobalt Reading Progress Indicator */}
+      <div id="reading-progress" style={{ width: `${scrollProgress}%` }} />
+
+      {/* Swiss Editorial Top Navbar */}
+      <Navbar activeSection={currentPage} onNavigate={navigateTo} />
+
+      {/* Main Page Content with React.lazy Suspense */}
+      <main className="flex-1">
+        <Suspense fallback={<PageSkeleton />}>
+          {renderCurrentPage()}
+        </Suspense>
+      </main>
+
+      {/* Swiss Minimalist Footer */}
+      <Footer />
+    </div>
+  );
+}
+
+export default App;

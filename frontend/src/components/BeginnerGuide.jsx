@@ -283,12 +283,13 @@ export const authUser = async (req, res, next) => {
 
     {
       stepNum: "STEP 07",
-      title: "สร้างเส้นทางและ Controller (src/routes/v2/users.routes.js)",
-      purpose: "สร้างจุดรับส่งข้อมูลสำหรับสมัครสมาชิก (Register), เข้าสู่ระบบ (Login), และตรวจบัตร (Auth)",
-      whySyntax: "ใช้ Router() ของ Express ในการแยกกลุ่มเส้นทางย่อย และใช้ async/await ร่วมกับ try...catch เพื่อจัดการข้อผิดพลาดและส่ง next(err)",
-      connection: "ไฟล์นี้นำ Model จาก Step 05 มาสั่งบันทึกข้อมูล, นำ Middleware จาก Step 06 มาดักหน้า Route /auth, และจะถูกนำไปเสียบเข้ากับ server.js ใน Step 08",
+      title: "สร้างเส้นทาง CRUD และ Auth Controller ครบวงจร (C-R-U-D Architecture)",
+      purpose: "สร้างจุดรับส่งข้อมูลครบทั้ง 4 มิติ CRUD (Create, Read, Update, Delete) พร้อมระบบยืนยันตัวตนที่ปลอดภัย",
+      whySyntax: "ใช้ Router() ของ Express แยกกลุ่มเส้นทาง, ใช้ req.params สำหรับระบุตัวตน ID, ใช้ req.body สำหรับรับข้อมูล, และใช้ async/await ครอบด้วย try...catch เพื่อส่งต่อ Error ด้วย next(err)",
+      connection: "ไฟล์นี้นำ User Model จาก Step 05 มาสั่งงาน Database, นำ authUser จาก Step 06 มาเป็นยามเฝ้าประตู, และจะถูกนำไปติดตั้งลงใน server.js ใน Step 08",
       file: "backend/src/routes/v2/users.routes.js",
       code: `import { Router } from "express";
+import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../../models/user.model.js";
@@ -296,18 +297,22 @@ import { authUser } from "../../middlewares/authUser.js";
 
 export const router = Router();
 
-// 1. สมัครสมาชิก: แฮชรหัสผ่าน 12 รอบ และตัดรหัสทิ้งก่อนตอบกลับ
+// =========================================================================
+// [C] CREATE: สร้างข้อมูลผู้ใช้ใหม่ (POST /register หรือ POST /)
+// =========================================================================
 router.post("/register", async (req, res, next) => {
   try {
     const { username, role, email, password } = req.body;
 
+    // 1. ตรวจสอบว่าส่งข้อมูลครบไหม (Validation)
     if (!username || !email || !password) {
-      return res.status(400).json({ error: "Missing required fields" });
+      return res.status(400).json({ error: "username, email, and password are required" });
     }
 
-    // แฮชรหัสผ่านด้วย Bcrypt Cost Factor 12
+    // 2. แฮชรหัสผ่านด้วย Bcrypt 12 รอบ (Security)
     const hash = await bcrypt.hash(password, 12);
 
+    // 3. สั่ง Mongoose บันทึกลง MongoDB
     const newUser = await User.create({
       username,
       role: role || "user",
@@ -316,64 +321,119 @@ router.post("/register", async (req, res, next) => {
       passwordHash: hash
     });
 
-    // ใช้ Destructuring ตัดรหัสผ่านทิ้ง
+    // 4. ตัดฟิลด์รหัสผ่านทิ้งก่อนส่งกลับ (Data Sanitization)
     const { password: _pw, passwordHash: _hash, ...safeUser } = newUser.toObject();
 
+    // 5. ตอบกลับด้วย Status 201 Created
     return res.status(201).json({ message: "Register successful", user: safeUser });
   } catch (err) {
     next(err);
   }
 });
 
-// 2. เข้าสู่ระบบ: เปรียบเทียบรหัสผ่าน และเซ็ต HttpOnly accessToken Cookie
-router.post("/login", async (req, res, next) => {
+// =========================================================================
+// [R] READ ALL: ดึงรายชื่อผู้ใช้ทั้งหมด (GET /)
+// =========================================================================
+router.get("/", async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) return res.status(400).json({ success: false, message: "User not found" });
-
-    // ตรวจสอบความถูกต้องของรหัสผ่าน
-    const isMatched = await bcrypt.compare(password, user.password);
-    if (!isMatched) return res.status(400).json({ success: false, message: "Incorrect Password" });
-
-    // สร้างตั๋ว JWT Token อายุ 1 ชั่วโมง
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-    const isProd = process.env.NODE_ENV === "production";
-
-    // ฝาก Token ลงใน HttpOnly Cookie ป้องกันการถูกขโมย
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
-      path: "/",
-      maxAge: 60 * 60 * 1000 // 1 ชั่วโมง
-    });
-
-    return res.status(200).json({ success: true, message: "Login Successful" });
+    // ดึง Document ทั้งหมดจาก MongoDB (Password ถูก select: false ซ่อนไว้ตาม Schema)
+    const users = await User.find();
+    return res.status(200).json(users);
   } catch (err) {
     next(err);
   }
 });
 
-// 3. ตรวจสอบสิทธิ์ผ่าน authUser Middleware
+// =========================================================================
+// [R] READ ONE: ดึงข้อมูลโปรไฟล์ของตัวเองหลังตรวจบัตร (GET /auth)
+// =========================================================================
 router.get("/auth", authUser, async (req, res, next) => {
   try {
+    // req.user ถูกฉีดเข้ามาจาก authUser Middleware
     const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
     return res.status(200).json({ success: true, data: user });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// =========================================================================
+// [U] UPDATE: อัปเดตแก้ไขข้อมูลผู้ใช้รายบุคคล (PUT /:id)
+// =========================================================================
+router.put("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params; // รับ ID จาก URL เช่น /api/v2/users/650abc...
+    const { username, email, password } = req.body;
+
+    const updateData = {};
+    if (username) updateData.username = username;
+    if (email) updateData.email = email;
+    if (password) {
+      const hash = await bcrypt.hash(password, 12);
+      updateData.password = hash;
+      updateData.passwordHash = hash;
+    }
+
+    // returnDocument: 'after' สั่งให้ Mongoose คืนค่าข้อมูล 'หลังแก้ไขแล้ว' กลับมา
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      returnDocument: "after",
+      runValidators: true
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const { password: _p, passwordHash: _h, ...safeUser } = updatedUser.toObject();
+    return res.status(200).json(safeUser);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// =========================================================================
+// [D] DELETE: ลบข้อมูลผู้ใช้ออกจากระบบ (DELETE /:id)
+// =========================================================================
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // ตรวจสอบความถูกต้องของ MongoDB ObjectId
+    let deletedUser = null;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      deletedUser = await User.findByIdAndDelete(id);
+    } else {
+      // ถ้าส่งมาเป็น username ก็ค้นหาลบได้เช่นกัน
+      deletedUser = await User.findOneAndDelete({ username: id });
+    }
+
+    if (!deletedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({ message: "Delete successful", deletedCount: 1 });
   } catch (err) {
     next(err);
   }
 });`,
       breakdown: [
         {
-          instruction: "const { password: _pw, ...safeUser } = newUser.toObject()",
-          why: "ตัดรหัสผ่านทิ้งก่อนส่ง JSON ออกไป รับประกันว่ารหัสผ่านจะไม่รั่วไหล"
+          instruction: "[C] User.create() & res.status(201)",
+          why: "การบันทึกข้อมูลใหม่ต้องคืน 201 Created เสมอ และต้องตัดรหัสผ่านทิ้งด้วย Rest Operator ก่อนส่ง JSON ออกไป"
         },
         {
-          instruction: "res.cookie('accessToken', token, { httpOnly: true })",
-          why: "ส่ง Cookie ให้เบราว์เซอร์เก็บไว้ในกล่องนิรภัยที่ JavaScript เข้าไม่ถึง"
+          instruction: "[R] User.find() & res.status(200)",
+          why: "ดึงข้อมูลทั้งหมดจาก Database โดย Mongoose Schema ป้องกันรหัสผ่านรั่วไหลด้วย select: false ไว้อัตโนมัติ"
+        },
+        {
+          instruction: "[U] User.findByIdAndUpdate(id, updateData, { returnDocument: 'after' })",
+          why: "อัปเดตเฉพาะฟิลด์ที่ส่งมา และออปชัน 'after' ทำให้เราได้ข้อมูลเวอร์ชันล่าสุดส่งกลับไปให้หน้าบ้านทันที"
+        },
+        {
+          instruction: "[D] User.findByIdAndDelete(id) & เช็ค 404",
+          why: "หากไม่พบ ID ที่ต้องการลบ ต้องรีบคืน 404 Not Found ทันที อย่าปล่อยให้เซิร์ฟเวอร์ตอบ 200 หลอกผู้ใช้งาน"
         }
       ]
     },

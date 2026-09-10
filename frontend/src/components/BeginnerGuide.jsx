@@ -349,7 +349,7 @@ router.get("/", async (req, res, next) => {
 // =========================================================================
 router.get("/auth", authUser, async (req, res, next) => {
   try {
-    // req.user ถูกฉีดเข้ามาจาก authUser Middleware
+    // req.user ถูกแนบเข้ามาโดย authUser Middleware (หลังถอดรหัส JWT สำเร็จ)
     const user = await User.findById(req.user.userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 

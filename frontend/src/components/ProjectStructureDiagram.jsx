@@ -90,11 +90,11 @@ export function ProjectStructureDiagram() {
       category: 'SECURITY GATEKEEPER',
       badge: 'Guard Middleware',
       role: 'ด่านตรวจบัตรและสิทธิ์ (Authentication Guard) ก่อนเข้าถึง Route สำคัญ',
-      desc: 'ทำหน้าที่ดักจับ Request ที่ต้องการเข้าถึงข้อมูลส่วนตัว แกะ accessToken ออกจาก HttpOnly Cookie หรือ Authorization Header, ตรวจสอบความถูกต้องของ Signature ด้วย jwt.verify() ร่วมกับ JWT_SECRET หากผ่านจะฉีด req.user = decoded และสั่ง next()',
+      desc: 'ทำหน้าที่ดักจับ Request ที่ต้องการเข้าถึงข้อมูลส่วนตัว แกะ accessToken ออกจาก HttpOnly Cookie หรือ Authorization Header, ตรวจสอบความถูกต้องของ Signature ด้วย jwt.verify() ร่วมกับ JWT_SECRET หากผ่านจะแนบ req.user = decoded เข้ากับ Request และสั่ง next()',
       keyFunctions: [
         'req.cookies.accessToken: ดึง Token ออกจาก Cookie ที่เบราว์เซอร์แนบมาอัตโนมัติ',
         'jwt.verify(token, secret): ถอดรหัสและตรวจความถูกต้องของตั๋ว Token',
-        'req.user = decoded: ฉีด userId เข้า Request Object เพื่อให้ Controller ถัดไปหยิบไปใช้',
+        'req.user = decoded: แนบข้อมูลผู้ใช้ (userId) เข้า Request Object เพื่อให้ Controller ถัดไปหยิบไปใช้',
         'next(): ปล่อยให้ Request เดินทางต่อไปยัง Controller เป้าหมาย'
       ],
       inputOutput: {
@@ -602,7 +602,7 @@ export function ProjectStructureDiagram() {
                   <h4 className="font-bold text-base text-[#20242A]">authUser & Routing</h4>
                   <div className="font-mono text-xs text-[#62666B]">middlewares/authUser.js</div>
                   <p className="text-xs text-[#62666B] font-sans leading-relaxed">
-                    Router ส่งต่อตาม URL ➔ ด่านตรวจ <code className="text-[#20242A]">authUser</code> ถอดรหัส JWT ตรวจสอบความถูกต้อง ถ้าผ่านจะฉีด <code className="text-[#20242A]">req.user</code>
+                    Router ส่งต่อตาม URL ➔ ด่านตรวจ <code className="text-[#20242A]">authUser</code> ถอดรหัส JWT ตรวจสอบความถูกต้อง ถ้าผ่านจะแนบข้อมูลผู้ใช้เข้า <code className="text-[#20242A]">req.user</code>
                   </p>
                 </div>
 

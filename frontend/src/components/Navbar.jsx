@@ -29,12 +29,12 @@ export function Navbar({ activeSection, onNavigate }) {
   }, []);
 
   const navItems = [
-    { id: 'structure', label: 'Structure' },
-    { id: 'tutorial', label: 'Step-by-Step' },
-    { id: 'databases', label: 'DB Commands' },
     { id: 'foundations', label: 'What is API' },
+    { id: 'structure', label: 'Structure' },
+    { id: 'tutorial', label: 'Step by Step' },
+    { id: 'databases', label: 'DB command' },
     { id: 'security', label: 'Security & Auth' },
-    { id: 'war-stories', label: 'War Stories' }
+    { id: 'war-stories', label: 'Problem Solving' }
   ];
 
   const handleNavClick = (id) => {

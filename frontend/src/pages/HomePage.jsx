@@ -26,7 +26,7 @@ export default function HomePage({ onNavigate }) {
       id: 'foundations',
       code: 'MOD_03',
       badge: 'PARADIGMS & ARCHITECTURE',
-      title: 'API กับ REST API ต่างกันอย่างไร?',
+      title: 'What is API? (และสถาปัตยกรรม REST)',
       desc: 'วิเคราะห์ความแตกต่าง พร้อมจำลองอนิเมชั่นร้านอาหาร (The Restaurant Analogy) และเปรียบเทียบ WebSocket, SSE, GraphQL หมัดต่อหมัด',
       icon: Compass,
       colSpan: 'lg:col-span-4'
@@ -53,7 +53,7 @@ export default function HomePage({ onNavigate }) {
       id: 'war-stories',
       code: 'MOD_06',
       badge: 'ENGINEERING POST-MORTEMS',
-      title: 'War Stories: ถอดบทเรียนบั๊กจริง',
+      title: 'Problem Solving: ถอดบทเรียนบั๊กจริง (War Stories)',
       desc: 'เจาะลึกปัญหา API ค้างเติ่ง, CORS credentials หาย และวิธีดีบักสาเหตุที่แท้จริงอย่างเด็ดขาด',
       icon: Flame,
       colSpan: 'lg:col-span-6',

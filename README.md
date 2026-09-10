@@ -1,3 +1,4 @@
+# https://api.siwat.me
 # 🌐 JSD-MONO: คู่มือและสถาปัตยกรรมระบบการเรียนรู้ API (API Learning Project)
 
 ยินดีต้อนรับสู่โปรเจคการเรียนรู้และพัฒนาระบบ **Backend RESTful API** แบบ Step-by-Step ตั้งแต่ระดับพื้นฐานจำลองฐานข้อมูลในหน่วยความจำ (In-Memory Database) จนถึงการพัฒนาระบบสถาปัตยกรรมระดับมืออาชีพที่เชื่อมต่อฐานข้อมูลจริงทั้ง **NoSQL (MongoDB)** และ **Relational SQL (PostgreSQL ผ่าน Supabase)** พร้อมระบบความปลอดภัยระดับสูง (**Bcrypt Hashing**, **JWT Authentication** และ **HttpOnly Cookie**)

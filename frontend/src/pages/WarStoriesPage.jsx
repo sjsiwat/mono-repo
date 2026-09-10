@@ -96,14 +96,14 @@ export default function WarStoriesPage() {
                     {incidentMeta.quote}
                   </div>
 
-                  <div className="text-xs font-mono text-[#20242A] pt-1">
-                    <span className="text-[#FF6B35] font-bold">อาการ (Symptom): </span>
-                    <span>{bug.symptom}</span>
+                  <div className="text-xs font-sans text-[#20242A] pt-1">
+                    <span className="text-[#FF6B35] font-semibold">อาการ (Symptom): </span>
+                    <span className="text-[#20242A]">{bug.symptom}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 self-start shrink-0 font-mono text-xs pt-1">
-                  <span className="text-[#62666B] hidden sm:inline">
+                <div className="flex items-center gap-2 self-start shrink-0 font-sans text-xs pt-1">
+                  <span className="text-[#62666B] hidden sm:inline font-medium">
                     {isOpen ? 'ย่อรายละเอียด' : 'ผ่าการแก้ไข'}
                   </span>
                   <div className={`p-1.5 border border-[#D9D8D3] transition-transform ${isOpen ? 'rotate-180 bg-[#20242A] text-white border-[#20242A]' : 'bg-[#F6F5F1] text-[#20242A]'}`} style={{ borderRadius: '4px' }}>
@@ -184,7 +184,7 @@ export default function WarStoriesPage() {
       {/* Footer Navigation */}
       <div className="pt-8 border-t border-[#D9D8D3] flex items-center justify-between">
         <BackButton label="กลับสู่หน้าหลัก (Home)" className="mb-0" />
-        <span className="text-xs font-mono text-[#62666B]">บทเรียนที่ 04: War Stories & Failure Modes</span>
+        <span className="text-xs font-sans text-[#62666B]">บทเรียนที่ 04: <span className="font-mono">War Stories & Failure Modes</span></span>
       </div>
     </div>
   );

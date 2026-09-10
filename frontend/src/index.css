@@ -40,15 +40,19 @@ body {
   font-family: var(--font-sans);
   margin: 0;
   padding: 0;
-  letter-spacing: -0.011em;
+  letter-spacing: normal;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
 /* Monospace & Code standard */
-code, pre, kbd, samp, .font-mono {
+code, pre, kbd, samp {
   font-family: var(--font-mono) !important;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
 }
 
 /* Restrained architectural radius */

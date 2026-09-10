@@ -133,12 +133,12 @@ export default function HomePage({ onNavigate }) {
                 </div>
 
                 {/* Bottom link indicator */}
-                <div className="mt-8 pt-4 border-t border-[#F6F5F1] flex items-center justify-between text-xs font-mono text-[#62666B] group-hover:text-[#20242A]">
-                  <span className="flex items-center gap-1.5 text-[11px]">
+                <div className="mt-8 pt-4 border-t border-[#F6F5F1] flex items-center justify-between text-xs text-[#62666B] group-hover:text-[#20242A]">
+                  <span className="flex items-center gap-1.5 text-xs font-sans font-medium">
                     <IconComponent className="w-3.5 h-3.5 text-[#62666B] group-hover:text-[#2457FF] transition-colors" />
                     <span>เข้าสู่บทเรียน</span>
                   </span>
-                  <div className="flex items-center gap-1 text-[#2457FF] opacity-80 group-hover:translate-x-1 transition-transform">
+                  <div className="flex items-center gap-1 text-[#2457FF] opacity-80 group-hover:translate-x-1 transition-transform font-mono">
                     <span className="text-[11px] font-semibold">READ CHAPTER</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </div>

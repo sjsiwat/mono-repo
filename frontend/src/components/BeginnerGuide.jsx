@@ -550,11 +550,11 @@ export async function fetchUsers() {
             </h4>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
+          <div className="flex items-center gap-2 shrink-0 font-sans text-xs">
             <button
               type="button"
               onClick={expandAll}
-              className="px-3 py-1.5 border border-[#D9D8D3] bg-[#FFFFFF] hover:bg-[#F6F5F1] text-[#20242A] font-semibold transition-all cursor-pointer flex items-center gap-1.5"
+              className="px-3 py-1.5 border border-[#D9D8D3] bg-[#FFFFFF] hover:bg-[#F6F5F1] text-[#20242A] font-medium transition-all cursor-pointer flex items-center gap-1.5"
               style={{ borderRadius: '4px' }}
             >
               <ChevronsUpDown className="w-3.5 h-3.5" />
@@ -563,7 +563,7 @@ export async function fetchUsers() {
             <button
               type="button"
               onClick={collapseAll}
-              className="px-3 py-1.5 border border-[#D9D8D3] bg-[#FFFFFF] hover:bg-[#F6F5F1] text-[#62666B] font-semibold transition-all cursor-pointer"
+              className="px-3 py-1.5 border border-[#D9D8D3] bg-[#FFFFFF] hover:bg-[#F6F5F1] text-[#62666B] font-medium transition-all cursor-pointer"
               style={{ borderRadius: '4px' }}
             >
               พับทั้งหมด
@@ -605,8 +605,8 @@ export async function fetchUsers() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs font-mono text-[#62666B] shrink-0 mt-1 sm:mt-0">
-                    <span className="hidden md:inline text-[11px]">
+                  <div className="flex items-center gap-2 text-xs font-sans text-[#62666B] shrink-0 mt-1 sm:mt-0">
+                    <span className="hidden md:inline text-xs font-medium">
                       {isOpen ? 'คลิกเพื่อพับเก็บ' : 'คลิกเพื่อดูโค้ด'}
                     </span>
                     <div className={`p-1.5 border border-[#D9D8D3] transition-transform ${

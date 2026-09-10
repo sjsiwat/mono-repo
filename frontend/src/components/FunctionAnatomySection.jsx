@@ -202,7 +202,7 @@ res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
               <span className="px-2.5 py-1 font-mono text-xs font-bold uppercase bg-[#EAF0FF] text-[#2457FF] border border-[#2457FF]/30" style={{ borderRadius: '3px' }}>
                 1. Parameter (พารามิเตอร์)
               </span>
-              <span className="text-[11px] font-mono text-[#62666B]">จังหวะสร้างฟังก์ชัน</span>
+              <span className="text-xs font-sans font-medium text-[#62666B]">จังหวะสร้างฟังก์ชัน</span>
             </div>
             
             <div>
@@ -216,7 +216,7 @@ res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
 
             {/* Visual Token Badges with Center-Aligned Arrows */}
             <div className="p-4 bg-[#20242A] text-[#F6F5F1] border border-[#20242A] overflow-x-auto" style={{ borderRadius: '4px' }}>
-              <div className="text-[10px] font-mono uppercase tracking-wider text-[#FF6B35] font-bold mb-3 flex items-center gap-1.5">
+              <div className="text-[10px] font-sans uppercase tracking-wider text-[#FF6B35] font-bold mb-3 flex items-center gap-1.5">
                 <Sparkles className="w-3 h-3 text-[#FF6B35]" />
                 <span>รหัสประกาศฟังก์ชัน (Function Definition):</span>
               </div>
@@ -271,10 +271,10 @@ res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
           {/* Argument Box */}
           <div className="p-6 bg-[#FFFFFF] border border-[#D9D8D3] space-y-4" style={{ borderRadius: '4px' }}>
             <div className="flex items-center justify-between">
-              <span className="px-2.5 py-1 font-mono text-xs font-bold uppercase bg-[#F6F5F1] text-[#20242A] border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
+              <span className="px-2.5 py-1 font-sans text-xs font-bold uppercase bg-[#F6F5F1] text-[#20242A] border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
                 2. Argument (อาร์กิวเมนต์)
               </span>
-              <span className="text-[11px] font-mono text-[#62666B]">จังหวะเรียกใช้งาน</span>
+              <span className="text-xs font-sans font-medium text-[#62666B]">จังหวะเรียกใช้งาน</span>
             </div>
 
             <div>
@@ -359,12 +359,12 @@ res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
           {/* Case 1: Bubble Tea */}
           <div className="p-4 bg-[#F6F5F1] border border-[#D9D8D3] space-y-3" style={{ borderRadius: '4px' }}>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold font-mono px-2 py-0.5 bg-[#FFF0EA] text-[#FF6B35]" style={{ borderRadius: '3px' }}>
+              <span className="text-xs font-medium font-sans px-2 py-0.5 bg-[#FFF0EA] text-[#FF6B35]" style={{ borderRadius: '3px' }}>
                 1. เคสร้านชานมไข่มุก
               </span>
               <Coffee className="w-4 h-4 text-amber-600" />
             </div>
-            <div className="text-xs font-mono text-[#20242A] bg-[#FFFFFF] p-2.5 border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
+            <div className="text-xs font-sans font-medium text-[#20242A] bg-[#FFFFFF] p-2.5 border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
               ชงชานม(รสชาติ, ความหวาน, ท็อปปิ้ง)
             </div>
             <div className="space-y-1.5 text-xs text-[#62666B] leading-relaxed font-sans">
@@ -380,12 +380,12 @@ res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
           {/* Case 2: ATM Machine */}
           <div className="p-4 bg-[#F6F5F1] border border-[#D9D8D3] space-y-3" style={{ borderRadius: '4px' }}>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold font-mono px-2 py-0.5 bg-[#EAF0FF] text-[#2457FF]" style={{ borderRadius: '3px' }}>
+              <span className="text-xs font-medium font-sans px-2 py-0.5 bg-[#EAF0FF] text-[#2457FF]" style={{ borderRadius: '3px' }}>
                 2. เคสตู้ ATM ถอนเงิน
               </span>
               <CreditCard className="w-4 h-4 text-[#2457FF]" />
             </div>
-            <div className="text-xs font-mono text-[#20242A] bg-[#FFFFFF] p-2.5 border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
+            <div className="text-xs font-sans font-medium text-[#20242A] bg-[#FFFFFF] p-2.5 border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
               ถอนเงินสด(รหัสPIN, จำนวนเงิน)
             </div>
             <div className="space-y-1.5 text-xs text-[#62666B] leading-relaxed font-sans">
@@ -401,12 +401,12 @@ res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
           {/* Case 3: Grab / Delivery App */}
           <div className="p-4 bg-[#F6F5F1] border border-[#D9D8D3] space-y-3" style={{ borderRadius: '4px' }}>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold font-mono px-2 py-0.5 bg-[#F6F5F1] text-[#20242A] border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
+              <span className="text-xs font-medium font-sans px-2 py-0.5 bg-[#F6F5F1] text-[#20242A] border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
                 3. เคสแอปเรียกรถ Grab
               </span>
               <Car className="w-4 h-4 text-emerald-600" />
             </div>
-            <div className="text-xs font-mono text-[#20242A] bg-[#FFFFFF] p-2.5 border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
+            <div className="text-xs font-sans font-medium text-[#20242A] bg-[#FFFFFF] p-2.5 border border-[#D9D8D3]" style={{ borderRadius: '3px' }}>
               เรียกรถ(จุดรับ, จุดส่ง, วิธีชำระ)
             </div>
             <div className="space-y-1.5 text-xs text-[#62666B] leading-relaxed font-sans">

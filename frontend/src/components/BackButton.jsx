@@ -9,10 +9,10 @@ export function BackButton({ label = "กลับสู่หน้าหลั
       <button
         onClick={handleBack}
         type="button"
-        className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#FFFFFF] border border-[#D9D8D3] text-[#20242A] hover:border-[#2457FF] hover:text-[#2457FF] transition-all font-mono text-xs font-semibold cursor-pointer group shadow-2xs"
+        className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#FFFFFF] border border-[#D9D8D3] text-[#20242A] hover:border-[#2457FF] hover:text-[#2457FF] transition-all font-sans text-xs font-medium tracking-normal cursor-pointer group shadow-2xs"
         style={{ borderRadius: '4px' }}
       >
-        <span className="group-hover:-translate-x-1 transition-transform text-xs leading-none font-bold">←</span>
+        <span className="font-mono group-hover:-translate-x-1 transition-transform text-xs leading-none font-bold">←</span>
         <span>{label}</span>
       </button>
     </div>

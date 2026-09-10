@@ -1,17 +1,19 @@
 import express from "express";
 import { users } from "./fakeDB/users.js";
 import { router as apiRoutes } from "./routes/index.js";
-import { router as authRoutes } from "./routes/v2/auth.routes.js";
+
 import { router as usersV2Routes } from "./routes/v2/users.routes.js";
 import { connectDB } from "./config/db.js";
 import { connectSupabase } from "./config/supabase.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = 666;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 //crud
 
@@ -179,7 +181,7 @@ app.get("/", (req, res) => {
 app.use("/api", apiRoutes);
 
 // Compatibility aliases for bcrypt week 11 root endpoints
-app.use(authRoutes);
+
 app.use("/users", usersV2Routes);
 
 // Centralized Error handling middleware

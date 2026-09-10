@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { Copy, Check, Target, HelpCircle, Link2, Search, AlertTriangle, Lightbulb } from 'lucide-react';
+import { Copy, Check, Target, HelpCircle, Link2, Search, AlertTriangle, Lightbulb, Code2 } from 'lucide-react';
+import { tokenizeCodeToLines, getTokenColorClass, detectLanguage } from '../utils/codeHighlighter';
 
-function renderHighlightedCodeWithLines(codeText) {
+function renderHighlightedCodeWithLines(codeText, file = '') {
   if (!codeText) return null;
-  const lines = codeText.split('\n');
+  const lang = detectLanguage(file, codeText);
+  const lines = tokenizeCodeToLines(codeText, lang);
 
   return (
     <div className="font-mono text-xs leading-relaxed">
-      {lines.map((line, lineIdx) => {
+      {lines.map((tokens, lineIdx) => {
         const lineNum = String(lineIdx + 1).padStart(2, '0');
-        const trimmed = line.trim();
-        const isComment = trimmed.startsWith('//') || trimmed.startsWith('#');
 
         return (
           <div
@@ -22,26 +22,16 @@ function renderHighlightedCodeWithLines(codeText) {
               {lineNum}
             </span>
 
-            {/* Code Content */}
-            <div className="flex-1 overflow-x-auto">
-              {isComment ? (
-                <span className="text-[#E5B567] italic font-medium">
-                  {line}
-                </span>
-              ) : line.includes('//') ? (
-                (() => {
-                  const parts = line.split('//');
-                  return (
-                    <>
-                      <span className="text-neutral-200">{parts[0]}</span>
-                      <span className="text-[#E5B567] italic font-medium">
-                        // {parts.slice(1).join('//')}
-                      </span>
-                    </>
-                  );
-                })()
+            {/* Code Content with syntax highlighting tokens */}
+            <div className="flex-1 overflow-x-auto whitespace-pre">
+              {tokens.length === 0 ? (
+                <span>&nbsp;</span>
               ) : (
-                <span className="text-neutral-100">{line || '\u00A0'}</span>
+                tokens.map((tok, tIdx) => (
+                  <span key={tIdx} className={getTokenColorClass(tok.type)}>
+                    {tok.content}
+                  </span>
+                ))
               )}
             </div>
           </div>
@@ -73,17 +63,31 @@ export function CodeWalkthrough({
     }
   };
 
+  const detectedLang = detectLanguage(file, code);
+
   return (
     <div className="my-8 space-y-4">
-      {/* 1. Engineer's Notebook Code Frame */}
-      <div className="rounded border border-[#D9D8D3] bg-[#1C2025] text-neutral-100 shadow-2xs overflow-hidden font-mono text-xs md:text-sm">
-        <div className="flex items-center justify-between px-4 py-3 bg-[#14171B] border-b border-[#2D333B] text-neutral-400">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-[#2457FF]"></span>
+      {/* 1. Engineer's Notebook Code Frame with Terminal Window Styling */}
+      <div className="rounded border border-[#2D333B] bg-[#14171B] text-neutral-100 shadow-sm overflow-hidden font-mono text-xs md:text-sm">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-[#1C2025] border-b border-[#2D333B] text-neutral-400">
+          <div className="flex items-center gap-3">
+            {/* Mac Terminal Traffic Light Dots */}
+            <div className="flex items-center gap-1.5 select-none">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] opacity-90 inline-block" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] opacity-90 inline-block" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F] opacity-90 inline-block" />
+            </div>
+
             <span className="font-mono text-xs text-neutral-200 font-semibold tracking-tight">
               {file || 'SourceCode.js'}
             </span>
+
+            {/* Language Tag */}
+            <span className="px-1.5 py-0.5 bg-[#252A32] text-neutral-400 border border-[#383E48] rounded text-[9px] font-mono uppercase tracking-wider">
+              {detectedLang}
+            </span>
           </div>
+
           <div className="flex items-center gap-3">
             <button
               onClick={handleCopy}
@@ -105,8 +109,8 @@ export function CodeWalkthrough({
           </div>
         </div>
 
-        <div className="p-3.5 overflow-x-auto selection:bg-[#2457FF] selection:text-white font-mono">
-          {renderHighlightedCodeWithLines(code)}
+        <div className="p-3.5 overflow-x-auto selection:bg-[#2457FF] selection:text-white font-mono bg-[#14171B]">
+          {renderHighlightedCodeWithLines(code, file)}
         </div>
       </div>
 

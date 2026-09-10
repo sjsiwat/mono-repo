@@ -169,9 +169,18 @@ export default function WarStoriesPage() {
 
                   {/* Server Level Fix if present */}
                   {bug.serverLevelFix && (
-                    <div className="p-4 bg-[#20242A] text-[#F6F5F1] font-mono text-xs space-y-2" style={{ borderRadius: '4px' }}>
-                      <span className="text-[#FF6B35] font-bold block">// การติดตั้ง Centralized Error Handling ในระดับรากฐาน (src/server.js)</span>
-                      <pre className="text-[#EAF0FF] overflow-x-auto leading-relaxed">{bug.serverLevelFix}</pre>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-emerald-500" />
+                        <h4 className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-600">
+                          GLOBAL ERROR HANDLER: การติดตั้งในระดับรากฐาน (src/server.js)
+                        </h4>
+                      </div>
+                      <CodeWalkthrough
+                        file="src/server.js (Centralized Error Handler)"
+                        code={bug.serverLevelFix}
+                        purpose="ดักจับ Error ที่หลุดรอดจาก Controller ทุกตัวในระบบ เพื่อการันตีว่าจะไม่ทำให้เซิร์ฟเวอร์ค้างเติ่ง"
+                      />
                     </div>
                   )}
 

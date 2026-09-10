@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Microscope, AlertTriangle, Target, Clock, ShieldCheck } from 'lucide-react';
+import { tokenizeCodeToLines, getTokenColorClass } from '../utils/codeHighlighter';
 
 export function BcryptMethodsCheatSheet() {
   const [filter, setFilter] = useState('all'); // 'all' | 'async' | 'sync' | 'util'
@@ -291,8 +292,18 @@ if (currentRounds < 12) {
               <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#62666B] block mb-1.5">
                 ตัวอย่างโค้ดใช้งานจริง:
               </span>
-              <div className="p-4 bg-[#20242A] text-[#F6F5F1] font-mono text-xs overflow-x-auto border border-[#20242A]" style={{ borderRadius: '4px' }}>
-                <pre className="text-emerald-300 leading-relaxed">{m.code}</pre>
+              <div className="p-3.5 bg-[#14171B] border border-[#2D333B] font-mono text-xs overflow-x-auto rounded">
+                <div className="space-y-0.5 leading-relaxed">
+                  {tokenizeCodeToLines(m.code, 'javascript').map((tokens, idx) => (
+                    <div key={idx} className="whitespace-pre">
+                      {tokens.map((tok, tIdx) => (
+                        <span key={tIdx} className={getTokenColorClass(tok.type)}>
+                          {tok.content}
+                        </span>
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 

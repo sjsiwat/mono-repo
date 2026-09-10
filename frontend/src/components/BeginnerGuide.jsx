@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronsUpDown, Terminal } from 'lucide-react';
 import { CodeWalkthrough } from './CodeWalkthrough';
+import { TerminalCodeBlock } from './TerminalCodeBlock';
 import { FunctionAnatomySection } from './FunctionAnatomySection';
 
 export function BeginnerGuide() {
@@ -770,13 +771,7 @@ export async function fetchUsers() {
                 {isOpen && (
                   <div className="px-5 pb-6 sm:px-6 sm:pb-6 pt-3 border-t border-[#D9D8D3] space-y-4 bg-[#FFFFFF]">
                     {item.terminalCode && (
-                      <div className="p-4 bg-[#20242A] text-[#F6F5F1] font-mono text-xs border border-[#20242A]" style={{ borderRadius: '4px' }}>
-                        <div className="text-[10px] uppercase font-bold text-[#FF6B35] mb-1 flex items-center gap-1.5">
-                          <Terminal className="w-3 h-3 text-[#FF6B35]" />
-                          <span>Terminal Commands:</span>
-                        </div>
-                        <pre className="overflow-x-auto text-[#EAF0FF]">{item.terminalCode}</pre>
-                      </div>
+                      <TerminalCodeBlock code={item.terminalCode} title="Terminal Command" />
                     )}
 
                     <CodeWalkthrough

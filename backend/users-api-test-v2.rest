@@ -1,0 +1,27 @@
+@baseUrl = http://localhost:666/api/v2
+
+### Read all users
+GET {{baseUrl}}/users
+
+### Create a new user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "siwaddsdsadt6sdd66",
+  "email": "jodsadhny@ddd.com",
+  "password": "tesdsat12345dsad6"
+}
+
+### PUT update user
+PUT  http://localhost:666/api/v2/users/6a9e606d0ecf3ad185565c30
+Content-Type: application/json
+
+{
+  "username": "johnyboy",
+  "email": "cat@mail.com",
+  "password": "cat123456"
+}
+
+### Delete a user
+DELETE http://localhost:666/api/v2/users/6a9e796694e0fd95cdedd9b8

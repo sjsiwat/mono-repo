@@ -1,6 +1,8 @@
 import express from "express";
 import { users } from "./fakeDB/users.js";
 import { router as apiRoutes } from "./routes/index.js";
+import { connectDB } from "./config/db.js";
+import { connectSupabase } from "./config/supabase.js";
 
 const app = express();
 const port = 666;
@@ -179,6 +181,17 @@ app.use((err, req, res, next) => {
     .json({ error: "Something crash bro", message: err.message });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on PORT 😈: ${port} ✔ `);
-});
+async function start() {
+  try {
+    await connectDB();
+    await connectSupabase();
+    app.listen(port, () => {
+      console.log(`Server is running on PORT 😈Localhost:${port} ✔ `);
+    });
+  } catch (err) {
+    console.error("Failed to connect to MONGODB ,OH DAMN :", err.message);
+    process.exit(1);
+  }
+}
+
+start();

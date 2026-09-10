@@ -193,20 +193,19 @@ export function ApiPlayground() {
             <div className="flex items-center gap-2 mb-1.5">
               <span className="w-1.5 h-1.5 bg-[#2457FF]" />
               <span className="font-mono text-xs uppercase tracking-widest text-[#62666B]">
-                INTERACTIVE CONSOLE / RUNTIME TESTER
+                INTERACTIVE CONSOLE / SIMULATOR
               </span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#20242A] tracking-tight">
-              Live API Workbench
+              Interactive API Playground
             </h2>
             <p className="mt-2 text-[#62666B] text-sm sm:text-base max-w-2xl leading-relaxed">
-              ทดสอบยิง HTTP Request เชื่อมต่อไปยัง Express Server ในโปรเจกต์จริง
-              สามารถทดลองพิมพ์ Payload ปรับเปลี่ยน Method และดูการประมวลผลข้อมูลในกล่อง Response ได้แบบเรียลไทม์
+              ระบบจำลองการยิง HTTP Request ให้ทดลองเล่นและดูผลลัพธ์
             </p>
           </div>
           <div className="font-mono text-xs text-[#20242A] px-3 py-1.5 bg-[#F6F5F1] border border-[#D9D8D3] flex items-center gap-2 self-start md:self-auto" style={{ borderRadius: '4px' }}>
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>TARGET: localhost:666</span>
+            <span>SIMULATOR PLAYGROUND</span>
           </div>
         </div>
 
@@ -399,16 +398,24 @@ export function ApiPlayground() {
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-xs text-[#D9D8D3]">RESPONSE INSPECTOR</span>
                   {responseResult && (
-                    <span
-                      className={`px-2 py-0.5 font-mono text-[10px] font-bold border ${
-                        responseResult.status >= 200 && responseResult.status < 300
-                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                          : 'bg-[#FF6B35]/20 text-[#FF6B35] border-[#FF6B35]/40'
-                      }`}
-                      style={{ borderRadius: '3px' }}
-                    >
-                      {responseResult.status} {responseResult.statusText || 'Response'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`px-2 py-0.5 font-mono text-[10px] font-bold border ${
+                          responseResult.status >= 200 && responseResult.status < 300
+                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+                            : 'bg-[#FF6B35]/20 text-[#FF6B35] border-[#FF6B35]/40'
+                        }`}
+                        style={{ borderRadius: '3px' }}
+                      >
+                        {responseResult.status} {responseResult.statusText || 'Response'}
+                      </span>
+                      <span
+                        className="px-1.5 py-0.5 font-mono text-[9px] font-semibold border bg-amber-500/10 text-amber-300 border-amber-500/30"
+                        style={{ borderRadius: '3px' }}
+                      >
+                        SIMULATOR
+                      </span>
+                    </div>
                   )}
                 </div>
 
@@ -466,9 +473,9 @@ export function ApiPlayground() {
               </div>
 
               {/* Footer status notice */}
-              <div className="px-5 py-2.5 bg-[#20242A] border-t border-[#D9D8D3]/20 text-[11px] font-mono text-[#62666B] flex items-center justify-between">
+              <div className="px-5 py-2.5 bg-[#20242A] border-t border-[#D9D8D3]/20 text-[11px] font-mono text-[#62666B] flex items-center justify-between flex-wrap gap-2">
                 <span>CORS origin: http://localhost:5173</span>
-                <span>Endpoint: {endpoint}</span>
+                <span>ระบบจำลอง (Simulator Playground)</span>
               </div>
             </div>
           </div>

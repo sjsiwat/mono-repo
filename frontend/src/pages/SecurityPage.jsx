@@ -170,6 +170,9 @@ router.post("/register", async (req, res, next) => {
       user: userWithoutPassword,
     });
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(409).json({ error: "Email or username already exists" });
+    }
     next(err);
   }
 });`}

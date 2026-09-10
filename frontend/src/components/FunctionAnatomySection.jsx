@@ -1,6 +1,28 @@
-import { Lightbulb, Coffee, CreditCard, Car, Sparkles, Target } from 'lucide-react';
+import { useState } from 'react';
+import { Lightbulb, Coffee, CreditCard, Car, Sparkles, Target, ChevronDown, ChevronsUpDown } from 'lucide-react';
 
 export function FunctionAnatomySection() {
+  const [openFunctions, setOpenFunctions] = useState(new Set([0]));
+
+  const toggleFunction = (idx) => {
+    setOpenFunctions(prev => {
+      const next = new Set(prev);
+      if (next.has(idx)) {
+        next.delete(idx);
+      } else {
+        next.add(idx);
+      }
+      return next;
+    });
+  };
+
+  const expandAll = () => {
+    setOpenFunctions(new Set(functionExamples.map((_, i) => i)));
+  };
+
+  const collapseAll = () => {
+    setOpenFunctions(new Set());
+  };
   const functionExamples = [
     {
       name: "app.listen(port, callback)",
@@ -174,9 +196,17 @@ res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
     <div className="p-8 bg-[#FFFFFF] border border-[#D9D8D3] space-y-8" style={{ borderRadius: '6px' }}>
       {/* Header */}
       <div>
+        {/* Good to know Label (ตัวใหญ่ชัดเจน) */}
+        <div className="mb-2.5">
+          <span className="inline-flex items-center gap-2 text-xl sm:text-2xl font-black tracking-tight text-[#2457FF]">
+            <Sparkles className="w-6 h-6 text-amber-500" />
+            <span>Good to know</span>
+          </span>
+        </div>
+
         <div className="flex items-center gap-2 mb-2">
           <span className="w-1.5 h-1.5 bg-[#2457FF]" />
-          <span className="font-mono text-xs uppercase tracking-widest text-[#62666B]">
+          <span className="font-mono text-xs uppercase tracking-widest text-[#62666B] font-bold">
             CORE PROGRAMMING FOUNDATIONS
           </span>
         </div>
@@ -423,85 +453,136 @@ res.cookie('accessToken', token, { httpOnly: true, sameSite: 'lax' });
 
       {/* Real Project Function Breakdown */}
       <div className="space-y-6">
-        <div>
-          <span className="font-mono text-xs uppercase tracking-wider text-[#62666B] font-bold">
-            PROJECT DEEP-DIVE / 8 ESSENTIAL FUNCTIONS
-          </span>
-          <h4 className="font-bold text-xl sm:text-2xl text-[#20242A] mt-0.5 tracking-tight">
-            ผ่า 8 ฟังก์ชันจริงในโปรเจกต์
-          </h4>
-          <p className="text-xs sm:text-sm text-[#62666B] mt-1 font-sans">
-            ดูเทียบกันชัดๆ ระหว่างการประกาศนิยาม (Definition) กับการเรียกใช้ส่งค่าจริง (Invocation)
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#D9D8D3]">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-wider text-[#62666B] font-bold">
+              PROJECT DEEP-DIVE / 8 ESSENTIAL FUNCTIONS
+            </span>
+            <h4 className="font-bold text-xl sm:text-2xl text-[#20242A] mt-0.5 tracking-tight">
+              8 ฟังก์ชันจริงในโปรเจกต์
+            </h4>
+            <p className="text-xs sm:text-sm text-[#62666B] mt-1 font-sans">
+              ดูเทียบกันชัดๆ ระหว่างการประกาศนิยาม (Definition) กับการเรียกใช้ส่งค่าจริง (Invocation)
+            </p>
+          </div>
+
+          {/* Expand / Collapse Controls */}
+          <div className="flex items-center gap-2 shrink-0 font-sans text-xs">
+            <button
+              type="button"
+              onClick={expandAll}
+              className="px-3 py-1.5 border border-[#D9D8D3] bg-[#FFFFFF] hover:bg-[#F6F5F1] text-[#20242A] font-medium transition-all cursor-pointer flex items-center gap-1.5"
+              style={{ borderRadius: '4px' }}
+            >
+              <ChevronsUpDown className="w-3.5 h-3.5" />
+              <span>ขยายทั้งหมด</span>
+            </button>
+            <button
+              type="button"
+              onClick={collapseAll}
+              className="px-3 py-1.5 border border-[#D9D8D3] bg-[#FFFFFF] hover:bg-[#F6F5F1] text-[#62666B] font-medium transition-all cursor-pointer"
+              style={{ borderRadius: '4px' }}
+            >
+              พับทั้งหมด
+            </button>
+          </div>
         </div>
 
-        <div className="space-y-6">
-          {functionExamples.map((fn, idx) => (
-            <div
-              key={idx}
-              className="p-6 bg-[#F6F5F1] border border-[#D9D8D3] space-y-4"
-              style={{ borderRadius: '6px' }}
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#D9D8D3]">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-[#2457FF]"></span>
-                  <span className="font-mono font-bold text-base sm:text-lg text-[#20242A]">
-                    {fn.name}
-                  </span>
-                </div>
-                <span className="font-mono text-xs px-2.5 py-1 bg-[#FFFFFF] border border-[#D9D8D3] text-[#20242A] font-bold self-start sm:self-auto" style={{ borderRadius: '3px' }}>
-                  {fn.category}
-                </span>
-              </div>
-
-              <p className="text-xs sm:text-sm text-[#20242A] leading-relaxed flex items-center gap-1.5 font-sans">
-                <Target className="w-3.5 h-3.5 text-[#2457FF] inline shrink-0" />
-                <span><strong>หน้าที่ของฟังก์ชัน:</strong> {fn.purpose}</span>
-              </p>
-
-              {/* Grid 2 Columns: Definition (Parameters) vs Invocation (Arguments) */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-1">
-                {/* 1. Definition (Parameters) */}
-                <div className="p-4 bg-[#FFFFFF] border border-[#D9D8D3] space-y-2.5" style={{ borderRadius: '4px' }}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono font-bold uppercase text-[#2457FF]">
-                      1. Parameters (ตัวแปรรอรับ)
+        <div className="space-y-4">
+          {functionExamples.map((fn, idx) => {
+            const isOpen = openFunctions.has(idx);
+            return (
+              <div
+                key={idx}
+                className={`bg-[#F6F5F1] border transition-all duration-200 overflow-hidden ${
+                  isOpen ? 'border-[#20242A]' : 'border-[#D9D8D3] hover:border-[#62666B]'
+                }`}
+                style={{ borderRadius: '6px' }}
+              >
+                {/* Clickable Header for Collapsing/Expanding */}
+                <button
+                  type="button"
+                  onClick={() => toggleFunction(idx)}
+                  className="w-full p-4 sm:p-5 text-left flex items-start sm:items-center justify-between gap-3 cursor-pointer focus:outline-none transition-colors hover:bg-[#EAE8E3]/60"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-2 h-2 rounded-full bg-[#2457FF]" />
+                      <span className="font-mono font-bold text-base sm:text-lg text-[#20242A]">
+                        {fn.name}
+                      </span>
+                    </div>
+                    <span className="font-mono text-xs px-2.5 py-0.5 bg-[#FFFFFF] border border-[#D9D8D3] text-[#20242A] font-bold self-start sm:self-auto" style={{ borderRadius: '3px' }}>
+                      {fn.category}
                     </span>
-                    <span className="text-[10px] font-mono text-[#62666B]">Definition</span>
                   </div>
-                  <div className="p-3 bg-[#20242A] text-[#F6F5F1] font-mono text-xs overflow-x-auto border border-[#20242A]" style={{ borderRadius: '4px' }}>
-                    <pre className="text-amber-300 leading-snug whitespace-pre">{fn.defDiagram}</pre>
+
+                  <div className="flex items-center gap-2 text-xs font-sans text-[#62666B] shrink-0 mt-0.5 sm:mt-0">
+                    <span className="hidden md:inline text-xs font-medium">
+                      {isOpen ? 'คลิกเพื่อพับเก็บ' : 'คลิกเพื่อดูโครงสร้าง'}
+                    </span>
+                    <div className={`p-1 border border-[#D9D8D3] transition-transform ${
+                      isOpen ? 'border-[#20242A] bg-[#20242A] text-white rotate-180' : 'bg-[#FFFFFF] text-[#20242A]'
+                    }`} style={{ borderRadius: '4px' }}>
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </div>
                   </div>
-                  <div className="space-y-1 pt-1 font-mono text-[11px]">
-                    {fn.parameters.map((p, pIdx) => (
-                      <div key={pIdx} className="flex items-start gap-1.5 text-[#62666B]">
-                        <span className="text-[#2457FF] font-bold whitespace-nowrap">• {p.name}</span>
-                        <span className="text-[#62666B] whitespace-nowrap">({p.type}):</span>
-                        <span className="font-sans text-[11px] leading-tight text-[#20242A]">{p.desc}</span>
+                </button>
+
+                {/* Collapsible Body */}
+                {isOpen && (
+                  <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-2 space-y-4 border-t border-[#D9D8D3] bg-[#F6F5F1]">
+                    <p className="text-xs sm:text-sm text-[#20242A] leading-relaxed flex items-center gap-1.5 font-sans pt-1">
+                      <Target className="w-3.5 h-3.5 text-[#2457FF] inline shrink-0" />
+                      <span><strong>หน้าที่ของฟังก์ชัน:</strong> {fn.purpose}</span>
+                    </p>
+
+                    {/* Grid 2 Columns: Definition (Parameters) vs Invocation (Arguments) */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-1">
+                      {/* 1. Definition (Parameters) */}
+                      <div className="p-4 bg-[#FFFFFF] border border-[#D9D8D3] space-y-2.5" style={{ borderRadius: '4px' }}>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-mono font-bold uppercase text-[#2457FF]">
+                            1. Parameters (ตัวแปรรอรับ)
+                          </span>
+                          <span className="text-[10px] font-mono text-[#62666B]">Definition</span>
+                        </div>
+                        <div className="p-3 bg-[#20242A] text-[#F6F5F1] font-mono text-xs overflow-x-auto border border-[#20242A]" style={{ borderRadius: '4px' }}>
+                          <pre className="text-amber-300 leading-snug whitespace-pre">{fn.defDiagram}</pre>
+                        </div>
+                        <div className="space-y-1 pt-1 font-mono text-[11px]">
+                          {fn.parameters.map((p, pIdx) => (
+                            <div key={pIdx} className="flex items-start gap-1.5 text-[#62666B]">
+                              <span className="text-[#2457FF] font-bold whitespace-nowrap">• {p.name}</span>
+                              <span className="text-[#62666B] whitespace-nowrap">({p.type}):</span>
+                              <span className="font-sans text-[11px] leading-tight text-[#20242A]">{p.desc}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
 
-                {/* 2. Invocation (Arguments) */}
-                <div className="p-4 bg-[#FFFFFF] border border-[#D9D8D3] space-y-2.5" style={{ borderRadius: '4px' }}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono font-bold uppercase text-emerald-700">
-                      2. Arguments (ค่าข้อมูลจริงที่ส่งไป)
-                    </span>
-                    <span className="text-[10px] font-mono text-[#62666B]">Invocation</span>
+                      {/* 2. Invocation (Arguments) */}
+                      <div className="p-4 bg-[#FFFFFF] border border-[#D9D8D3] space-y-2.5" style={{ borderRadius: '4px' }}>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-mono font-bold uppercase text-emerald-700">
+                            2. Arguments (ค่าข้อมูลจริงที่ส่งไป)
+                          </span>
+                          <span className="text-[10px] font-mono text-[#62666B]">Invocation</span>
+                        </div>
+                        <div className="p-3 bg-[#20242A] text-[#F6F5F1] font-mono text-xs overflow-x-auto border border-[#20242A]" style={{ borderRadius: '4px' }}>
+                          <pre className="text-emerald-300 leading-snug whitespace-pre">{fn.callDiagram}</pre>
+                        </div>
+                        <p className="text-[11px] text-[#62666B] font-sans leading-relaxed pt-1 flex items-start gap-1.5">
+                          <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                          <span><strong>คำอธิบาย:</strong> {fn.argumentExplanation}</span>
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="p-3 bg-[#20242A] text-[#F6F5F1] font-mono text-xs overflow-x-auto border border-[#20242A]" style={{ borderRadius: '4px' }}>
-                    <pre className="text-emerald-300 leading-snug whitespace-pre">{fn.callDiagram}</pre>
-                  </div>
-                  <p className="text-[11px] text-[#62666B] font-sans leading-relaxed pt-1 flex items-start gap-1.5">
-                    <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
-                    <span><strong>คำอธิบาย:</strong> {fn.argumentExplanation}</span>
-                  </p>
-                </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

@@ -2,9 +2,9 @@ export const CURRICULUM = {
   hero: {
     badge: "ENGINEERING PLAYBOOK & ARCHITECTURE",
     title: "Not just how it connects — how it thinks.",
-    subtitle: "คู่มือฉบับสมบูรณ์สำหรับทำความเข้าใจ API ตั้งแต่รากฐาน สถาปัตยกรรม Request-Response จนถึงการต่อระบบ Front-End และ Back-End จริง โดยถอดรหัสจากโค้ดจริงในโปรเจกต์ JSD-MONO",
+    subtitle: "คู่มือฉบับสมบูรณ์สำหรับทำความเข้าใจ API ตั้งแต่รากฐาน สถาปัตยกรรม Request-Response จนถึงการต่อระบบ Front-End และ Back-End จริง โดยเรียนรู้จริงจากโค้ดจริงในโปรเจกต์ JSD-MONO",
     meta: [
-      { label: "Architecture", value: "RESTful + Express 5" },
+      { label: "Architecture", value: "RESTful + Express (v4)" },
       { label: "Data Tier", value: "In-Memory / MongoDB / Supabase" },
       { label: "Security", value: "Bcrypt (12 Rounds) + JWT Cookie" },
       { label: "Port Binding", value: "Client :5173 ⟷ Server :666" }
@@ -38,7 +38,7 @@ export const CURRICULUM = {
             },
             {
               role: "The API Server (Backend Controller)",
-              tech: "Node.js, Express 5 (รันที่ localhost:666)",
+              tech: "Node.js, Express (v4.21.2 รันที่ localhost:666)",
               desc: "เป็นหัวใจสมองกล คอยเปิดประตูดักฟัง (Port Listener) ตรวจสอบสิทธิ์ (Auth Middleware), Validate ความถูกต้องของข้อมูล และกำหนดทิศทาง (Routing)"
             },
             {

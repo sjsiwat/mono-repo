@@ -71,7 +71,7 @@ export function HeroSection({ onSelectModule }) {
         {/* Editorial Subtitle */}
         <p className="mt-6 text-base sm:text-lg text-[#62666B] max-w-2xl font-sans leading-relaxed">
           Four foundational rules behind every API response.<br className="hidden sm:inline" />
-          ถอดรหัสจากโปรเจกต์จริง สู่หลักการออกแบบและเชื่อมต่อระบบ Front-End + Back-End
+          เรียนรู้จริงจากโปรเจกต์จริง สู่หลักการออกแบบและเชื่อมต่อระบบ Front-End + Back-End
         </p>
 
         {/* Typographic Swiss API Pipeline Flow Diagram */}

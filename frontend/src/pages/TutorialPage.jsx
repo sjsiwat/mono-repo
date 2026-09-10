@@ -8,7 +8,7 @@ export default function TutorialPage() {
       <BeginnerGuide />
       <div className="pt-8 mt-12 border-t border-[#D9D8D3] flex items-center justify-between">
         <BackButton scrollToTop className="mb-0" />
-        <span className="text-xs font-sans text-[#62666B]">คู่มือการพัฒนา: <span className="font-mono">Step-by-Step Backend Guide</span></span>
+        <span className="text-xs font-sans text-[#62666B]">คู่มือการพัฒนา: <span className="font-mono">Step-by-Step Backend & Frontend Integration Guide</span></span>
       </div>
     </div>
   );

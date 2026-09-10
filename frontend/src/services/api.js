@@ -169,7 +169,7 @@ function getDynamicResponse(version, endpoint, method, body, latency) {
             email: userEmail,
             role: "admin"
           },
-          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzEyMzQ1Njc4OTBhYmNkZWYxMjM0NSIsInJvbGUiOiJhZG1pbiJ9.k7Bv6..."
+          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzEyMzQ1Njc4OTBhYmNkZWYxMjM0NSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxMDExMjAwMCwiZXhwIjoxNzEwMTk4NDAwfQ.4A8Z6N2k7Bv9X1mQ_L4dY5pE0sW8tR2uV7gH3jK9mNo"
         },
         isLive: false
       };

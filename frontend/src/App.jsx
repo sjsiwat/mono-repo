@@ -17,7 +17,7 @@ import PlaygroundPage from './pages/PlaygroundPage';
 const ROUTE_META = {
   home: {
     title: "API Architecture & Engineering Guide — Swiss Editorial Style",
-    desc: "Four foundational rules behind every API response. ถอดรหัสจากโปรเจกต์จริง สู่หลักการออกแบบและเชื่อมต่อระบบ Front-End + Back-End"
+    desc: "Four foundational rules behind every API response. เรียนรู้จริงจากโปรเจกต์จริง สู่หลักการออกแบบและเชื่อมต่อระบบ Front-End + Back-End"
   },
   foundations: {
     title: "What is API & REST Architecture (MOD_01) | api.siwat.me",
@@ -29,7 +29,7 @@ const ROUTE_META = {
   },
   tutorial: {
     title: "Step-by-Step Backend Guide (MOD_03) | api.siwat.me",
-    desc: "คู่มือสร้าง REST API ครบวงจร 10 ขั้นตอน: .env, MongoDB, Mongoose Model, authUser Middleware, CRUD & Login Controllers, server.js"
+    desc: "คู่มือสร้าง REST API ครบวงจร 11 ขั้นตอน (STEP 00–10): ขึ้นโครง Monorepo, .env, MongoDB, Mongoose Model, authUser Middleware, CRUD & Login Controllers, server.js จนถึงเชื่อมต่อ React"
   },
   databases: {
     title: "Database Essentials & Commands (MOD_04) | api.siwat.me",

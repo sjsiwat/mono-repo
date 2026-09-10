@@ -14,7 +14,7 @@ export function Footer() {
               <span className="font-extrabold text-base text-[#20242A] tracking-tight">API Architecture Guide</span>
             </div>
             <p className="text-xs sm:text-sm text-[#62666B] max-w-md leading-relaxed">
-              สื่อการเรียนรู้วิศวกรรม API และสถาปัตยกรรม Backend ถอดรหัสจากระบบจริงในโปรเจกต์ JSD-MONO เพื่อปูรากฐานสู่ความเข้าใจเชิงลึกสำหรับนักพัฒนาซอฟต์แวร์
+              สื่อการเรียนรู้วิศวกรรม API และสถาปัตยกรรม Backend เรียนรู้จริงจากระบบจริงในโปรเจกต์ JSD-MONO เพื่อปูรากฐานสู่ความเข้าใจเชิงลึกสำหรับนักพัฒนาซอฟต์แวร์
             </p>
           </div>
 

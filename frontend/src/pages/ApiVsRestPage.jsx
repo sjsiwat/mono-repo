@@ -72,7 +72,7 @@ export default function ApiVsRestPage() {
           </span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#20242A]">
-          The Essence of API & REST API Architecture
+          What is API? (The Essence of API & REST Architecture)
         </h2>
         <p className="text-[#62666B] mt-2 text-base leading-relaxed max-w-3xl font-sans">
           {m1.summary}
@@ -386,7 +386,7 @@ app.listen(port, () => {
       {/* Footer Navigation */}
       <div className="pt-8 border-t border-[#D9D8D3] flex items-center justify-between">
         <BackButton label="กลับสู่หน้าหลัก (Home)" className="mb-0" />
-        <span className="text-xs font-sans text-[#62666B]">บทเรียนที่ 01: <span className="font-mono">The Essence of API & REST API</span></span>
+        <span className="text-xs font-sans text-[#62666B]">บทเรียนที่ 01: <span className="font-mono">What is API & REST Architecture</span></span>
       </div>
     </div>
   );

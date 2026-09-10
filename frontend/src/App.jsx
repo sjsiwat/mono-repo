@@ -1,19 +1,18 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { PageSkeleton } from './components/PageSkeleton';
 
-// ⭐ Code-Splitting via React.lazy() for each page
-const HomePage = lazy(() => import('./pages/HomePage'));
-const StructurePage = lazy(() => import('./pages/StructurePage'));
-const TutorialPage = lazy(() => import('./pages/TutorialPage'));
-const DatabaseCheatSheetPage = lazy(() => import('./pages/DatabaseCheatSheetPage'));
-const EnvCorsPage = lazy(() => import('./pages/EnvCorsPage'));
-const ApiVsRestPage = lazy(() => import('./pages/ApiVsRestPage'));
-const LifecyclePage = lazy(() => import('./pages/LifecyclePage'));
-const SecurityPage = lazy(() => import('./pages/SecurityPage'));
-const WarStoriesPage = lazy(() => import('./pages/WarStoriesPage'));
-const PlaygroundPage = lazy(() => import('./pages/PlaygroundPage'));
+// Direct static imports for instantaneous zero-latency page switching
+import HomePage from './pages/HomePage';
+import StructurePage from './pages/StructurePage';
+import TutorialPage from './pages/TutorialPage';
+import DatabaseCheatSheetPage from './pages/DatabaseCheatSheetPage';
+import EnvCorsPage from './pages/EnvCorsPage';
+import ApiVsRestPage from './pages/ApiVsRestPage';
+import LifecyclePage from './pages/LifecyclePage';
+import SecurityPage from './pages/SecurityPage';
+import WarStoriesPage from './pages/WarStoriesPage';
+import PlaygroundPage from './pages/PlaygroundPage';
 
 function getPageFromHash() {
   const hash = window.location.hash.replace('#', '').trim();
@@ -100,11 +99,9 @@ function App() {
       {/* Swiss Editorial Top Navbar */}
       <Navbar activeSection={currentPage} onNavigate={navigateTo} />
 
-      {/* Main Page Content with React.lazy Suspense */}
+      {/* Main Page Content */}
       <main className="flex-1">
-        <Suspense fallback={<PageSkeleton />}>
-          {renderCurrentPage()}
-        </Suspense>
+        {renderCurrentPage()}
       </main>
 
       {/* Swiss Minimalist Footer */}

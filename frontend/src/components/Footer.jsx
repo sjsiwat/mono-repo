@@ -18,16 +18,28 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Col 2: System Spec */}
+          {/* Col 2: System Spec & Deployment */}
           <div>
             <h4 className="font-mono text-xs uppercase font-bold text-[#20242A] tracking-wider mb-3">
-              System Architecture
+              Deployment & Stack
             </h4>
             <ul className="space-y-2 text-xs font-mono text-[#62666B]">
-              <li>• Frontend: React 19 + Tailwind</li>
-              <li>• Backend: Express 5 (Port 666)</li>
-              <li>• Database: MongoDB + Supabase</li>
-              <li>• Security: Bcrypt (12) + HttpOnly</li>
+              <li className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#FF6B35]" />
+                <span>Frontend: <strong className="text-[#20242A]">Cloudflare</strong></span>
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                <span>Backend: <strong className="text-[#20242A]">Render</strong></span>
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#2457FF]" />
+                <span>Database: <strong className="text-[#20242A]">MongoDB Atlas</strong></span>
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-purple-600" />
+                <span>Security: <strong className="text-[#20242A]">Bcrypt + HttpOnly</strong></span>
+              </li>
             </ul>
           </div>
 

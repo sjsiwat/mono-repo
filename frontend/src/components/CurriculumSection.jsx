@@ -18,7 +18,7 @@ export function CurriculumSection({ activeTab, onTabChange }) {
   const tabs = [
     { id: 'tutorial', num: '00', label: 'Step-by-Step' },
     { id: 'env-cors', num: '01', label: '.env & CORS' },
-    { id: 'foundations', num: '02', label: 'API vs REST' },
+    { id: 'foundations', num: '02', label: 'What is API' },
     { id: 'lifecycle', num: '03', label: 'Lifecycle (v1 vs v2)' },
     { id: 'security', num: '04', label: 'Bcrypt & Identity' },
     { id: 'war-stories', num: '05', label: 'War Stories (Bugs)' },

@@ -32,7 +32,7 @@ export function Navbar({ activeSection, onNavigate }) {
     { id: 'structure', label: 'Structure' },
     { id: 'tutorial', label: 'Step-by-Step' },
     { id: 'databases', label: 'DB Commands' },
-    { id: 'foundations', label: 'API vs REST' },
+    { id: 'foundations', label: 'What is API' },
     { id: 'security', label: 'Security & Auth' },
     { id: 'war-stories', label: 'War Stories' }
   ];

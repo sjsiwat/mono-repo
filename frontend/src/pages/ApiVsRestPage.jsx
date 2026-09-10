@@ -385,7 +385,7 @@ app.listen(port, () => {
 
       {/* Footer Navigation */}
       <div className="pt-8 border-t border-[#D9D8D3] flex items-center justify-between">
-        <BackButton label="กลับสู่หน้าหลัก (Home)" className="mb-0" />
+        <BackButton scrollToTop className="mb-0" />
         <span className="text-xs font-sans text-[#62666B]">บทเรียนที่ 01: <span className="font-mono">What is API & REST Architecture</span></span>
       </div>
     </div>

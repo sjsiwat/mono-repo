@@ -241,7 +241,7 @@ export const authUser = async (req, res, next) => {
 
       {/* Footer Navigation */}
       <div className="pt-8 border-t border-[#D9D8D3] flex items-center justify-between">
-        <BackButton label="กลับสู่หน้าหลัก (Home)" className="mb-0" />
+        <BackButton scrollToTop className="mb-0" />
         <span className="text-xs font-sans text-[#62666B]">บทเรียนที่ 03: <span className="font-mono">Security & Cryptography</span></span>
       </div>
     </div>

@@ -584,7 +584,7 @@ return res.status(200).json({ success: true, message: "User deleted successfully
 
       {/* Footer Navigation */}
       <div className="pt-8 border-t border-[#D9D8D3] flex items-center justify-between">
-        <BackButton label="กลับสู่หน้าหลัก (Home)" className="mb-0" />
+        <BackButton scrollToTop className="mb-0" />
         <span className="text-xs font-sans text-[#62666B]">บทเรียนที่ 02: <span className="font-mono">Database Essentials (CRUD)</span></span>
       </div>
     </div>

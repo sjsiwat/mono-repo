@@ -113,7 +113,7 @@ router.get("/", async (req, res, next) => {
       </div>
 
       <div className="pt-8 border-t border-neutral-200/80 flex items-center justify-between">
-        <BackButton label="กลับสู่หน้าหลัก (Home)" className="mb-0" />
+        <BackButton scrollToTop className="mb-0" />
         <span className="text-xs font-sans text-neutral-400">บทเรียนที่ 02: <span className="font-mono">Request-Response Lifecycle (v1 vs v2)</span></span>
       </div>
     </div>
